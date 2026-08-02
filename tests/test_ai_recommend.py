@@ -1,6 +1,6 @@
 """AI1 recommend: taxonomy guardrail, keyword fallback, transport degrade."""
-import hackingtool.ai_recommend as ai_recommend
-import hackingtool.tags as tags
+import one2one.ai_recommend as ai_recommend
+import one2one.tags as tags
 
 
 def test_parse_drops_fabricated_tags():
@@ -56,7 +56,7 @@ class _FakeResp:
 
 
 def test_test_connection_byo_ok(monkeypatch):
-    from hackingtool import config
+    from one2one import config
     monkeypatch.setattr(config, "ai_provider", lambda: "openai-compat")
     monkeypatch.setattr(config, "ai_base_url", lambda: "https://api.anthropic.com/v1")
     monkeypatch.setattr(config, "ai_key", lambda: "sk-test")
@@ -69,17 +69,17 @@ def test_test_connection_byo_ok(monkeypatch):
 
 
 def test_test_connection_reports_missing_key(monkeypatch):
-    from hackingtool import config
+    from one2one import config
     monkeypatch.setattr(config, "ai_provider", lambda: "openai-compat")
     monkeypatch.setattr(config, "ai_base_url", lambda: "https://x/v1")
     monkeypatch.setattr(config, "ai_key", lambda: "")
     ok, detail = ai_recommend.test_connection()
-    assert not ok and "HACKINGTOOL_AI_KEY" in detail
+    assert not ok and "ONE2ONE_AI_KEY" in detail
 
 
 def test_test_connection_surfaces_http_error(monkeypatch):
     import urllib.error
-    from hackingtool import config
+    from one2one import config
     monkeypatch.setattr(config, "ai_provider", lambda: "openai-compat")
     monkeypatch.setattr(config, "ai_base_url", lambda: "https://x/v1")
     monkeypatch.setattr(config, "ai_key", lambda: "sk-bad")

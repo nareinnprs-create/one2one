@@ -1,10 +1,10 @@
-# How to use hackingtool
+# How to use one2one
 
 Step-by-step walkthroughs of the console. Every step below is something you type
 and something you get back — no prior knowledge of the codebase needed.
 
 > **Authorized targets only.** Everything here assumes you own the target or hold
-> written permission to test it. hackingtool never runs a step without asking you
+> written permission to test it. one2one never runs a step without asking you
 > first, and never invents results.
 
 - [1. First run](#1-first-run)
@@ -12,39 +12,40 @@ and something you get back — no prior knowledge of the codebase needed.
 - [3. Open and install a tool](#3-open-and-install-a-tool)
 - [4. Find a tool that isn't in the catalog (`/find`)](#4-find-a-tool-that-isnt-in-the-catalog-find)
 - [5. Plan and run an objective (`/goal`)](#5-plan-and-run-an-objective-goal)
-- [6. Connect a model (`/config`)](#6-connect-a-model-config)
-- [7. Add a GitHub token for `/find` (`/config github`)](#7-add-a-github-token-for-find-config-github)
-- [8. Run tools in background panes](#8-run-tools-in-background-panes)
-- [9. Headless mode: engagements, pipelines, reports](#9-headless-mode-engagements-pipelines-reports)
+- [6. Run the Mythos red-team pipeline (`/mythos`)](#6-run-the-mythos-red-team-pipeline-mythos)
+- [7. Connect a model (`/config`)](#7-connect-a-model-config)
+- [8. Add a GitHub token for `/find` (`/config github`)](#8-add-a-github-token-for-find-config-github)
+- [9. Run tools in background panes](#9-run-tools-in-background-panes)
+- [10. Headless mode: engagements, pipelines, reports](#10-headless-mode-engagements-pipelines-reports)
 
 ---
 
 ## 1. First run
 
 1. Install it (see the [README](../README.md#installation)). From a checkout, the
-   quickest path that puts `hackingtool` on your PATH is:
+   quickest path that puts `one2one` on your PATH is:
 
    ```bash
-   git clone https://github.com/Z4nzu/hackingtool.git
-   cd hackingtool
+   git clone https://github.com/one2one/one2one.git
+   cd one2one
    pipx install .
    ```
 
 2. Launch it:
 
    ```bash
-   hackingtool
+   one2one
    ```
 
-3. On the first launch hackingtool creates its home directory — nothing is
+3. On the first launch one2one creates its home directory — nothing is
    written outside it:
 
    | Path | What it is |
    |---|---|
-   | `~/.hackingtool/config.json` | your settings (defaults on first run) |
-   | `~/.hackingtool/.env` | commented secrets template, `chmod 600` — no active secret in it |
-   | `~/.hackingtool/tools/` | where tools you install are cloned/built |
-   | `~/.hackingtool/history` | your `↑`/`↓` command history |
+   | `~/.one2one/config.json` | your settings (defaults on first run) |
+   | `~/.one2one/.env` | commented secrets template, `chmod 600` — no active secret in it |
+   | `~/.one2one/tools/` | where tools you install are cloned/built |
+   | `~/.one2one/history` | your `↑`/`↓` command history |
 
 4. You land on the banner + prompt. The header line tells you what you have:
    OS, IP, and `22 categories · 217 active · 59 archived` (that count includes
@@ -55,7 +56,7 @@ and something you get back — no prior knowledge of the codebase needed.
 
 If your terminal isn't interactive, or `prompt_toolkit` isn't available, you get
 the classic numbered menu instead — same features, numbers instead of commands.
-Force it any time with `hackingtool --classic`.
+Force it any time with `one2one --classic`.
 
 ---
 
@@ -103,7 +104,7 @@ Tab completes commands, tool names and tags. `↑`/`↓` walk your history.
    category and `98` opens the archived tools of that category (if it has any).
 
 If a tool is already on your PATH from your distro (`apt`, `brew`, Kali's
-metapackages), hackingtool reuses that binary instead of re-cloning it.
+metapackages), one2one reuses that binary instead of re-cloning it.
 
 ---
 
@@ -134,10 +135,10 @@ model calls**.
    ```
    [a] add one to your toolbox · [Enter] done: a
    which? 1-5: 2
-   Added.  /Users/you/.hackingtool/found.yaml
+   Added.  /Users/you/.one2one/found.yaml
    ```
 
-4. What that writes: an entry in **`~/.hackingtool/found.yaml`** under a
+4. What that writes: an entry in **`~/.one2one/found.yaml`** under a
    `Discovered tools` category — title, tags, description, project URL. It
    deliberately stores **no install or run command**, so a discovered entry can
    never execute anything; it is a bookmark that shows up in your menu and in
@@ -172,7 +173,7 @@ runs the steps **you** approve, one at a time.
    /goal find live subdomains of example.com
    ```
 
-2. hackingtool plans (one model call, made against a vetted operator
+2. one2one plans (one model call, made against a vetted operator
    methodology) and prints the plan: each step's tool, the exact argv it would
    run, why it's there, and — for tools you don't have — an install hint.
 
@@ -203,7 +204,7 @@ runs the steps **you** approve, one at a time.
 5. Everything lands in a timestamped workspace:
 
    ```
-   ~/.hackingtool/goals/2026-07-26T18-40-12-123456/
+   ~/.one2one/goals/2026-07-26T18-40-12-123456/
    ├── plan.json          the drafted plan
    ├── run.log            UTC-stamped: authorization, per-step decision, outcome
    └── step-1-subfinder.txt   raw output of each step you ran
@@ -219,7 +220,56 @@ recommendations for the same objective.
 
 ---
 
-## 6. Connect a model (`/config`)
+## 6. Run the Mythos red-team pipeline (`/mythos`)
+
+`/mythos` (aliases `/redteam`, `/rt`) runs the six-agent red-team pipeline on an
+**authorized** target:
+
+```
+/mythos example.com            # network/host: recon → hunter → adversarial → exploit → triage → ai-security
+/mythos code:./src             # codebase deep-dive: offline scans + model review
+/mythos binary:./challenge     # binary analysis
+```
+
+The pipeline is RECON → HUNTER → ADVERSARIAL → EXPLOIT → TRIAGE → AI-SECURITY.
+Each agent has a **closed output contract**: the model may only return findings
+using the fixed vulnerability-class vocabulary and the three-tier confidence
+model, so it can never invent a class. Offline deterministic scanners run first
+and their leads are included in every agent prompt; TRIAGE scores CVSS / tier /
+severity offline, never through the model. With no model reachable, the whole run
+degrades to those offline scans — nothing is fabricated.
+
+What each phase does:
+
+- **RECON** plans real recon commands for a host/URL and runs them with per-step
+  approval (`[y]` run · `[s]` skip · `[q]` abort). Code/binary targets skip it.
+- **HUNTER** feeds recon output or code material to the model and validates every
+  finding it returns against the closed sets.
+- **ADVERSARIAL** chains real findings into attack paths; chains referencing
+  unknown findings are dropped.
+- **EXPLOIT** drafts PoCs into a sandbox workspace. For a local `code:` target
+  they can be validated at runtime in an isolated docker container
+  (`--network none`, read-only code mount) with explicit per-run approval — gated
+  by `mythos_sandbox` in `/config`.
+- **TRIAGE** ranks deterministically (confirmed > plausible > theoretical) and
+  flags high/critical findings that are only theoretical (needs Tier 1/2).
+- **AI-SECURITY** scans for LLM-specific risks (prompt injection, RAG poisoning,
+  tool misuse, exfiltration, unsafe agent chaining); on network targets it also
+  runs the **AI self-test**, probing this app's own AI layer for injection
+  resistance.
+
+Everything lands in a timestamped workspace under `~/.one2one/mythos/`:
+
+```
+mythos_findings.json   ranked findings (closed vocabulary, deterministic scores)
+chains.json            attack paths with real finding indices
+self_test.json         AI prompt-injection probe results
+mythos_report.md       Markdown report
+```
+
+---
+
+## 7. Connect a model (`/config`)
 
 The AI layer is opt-in and bring-your-own-key. Without it everything still works:
 recommendations fall back to a keyword matcher, `/find` never needed a model, and
@@ -238,7 +288,7 @@ commands come from the curated cheatsheets.
 
 2. Set `ai_base_url` (e.g. `https://api.openai.com/v1`) and `ai_model`.
 3. Select the `ai_key` row, press `Enter`, paste your key. It is masked while
-   typing and written to `~/.hackingtool/.env` (mode 600) — **never** to
+   typing and written to `~/.one2one/.env` (mode 600) — **never** to
    `config.json`, never printed back.
 4. Test it:
 
@@ -255,12 +305,12 @@ commands come from the curated cheatsheets.
 
 Any key can also be set in one line, e.g. `/config theme cyan`,
 `/config show_archived true`, `/config background_runner off`. Environment
-variables (`HACKINGTOOL_AI_BASE_URL`, `HACKINGTOOL_AI_MODEL`,
-`HACKINGTOOL_AI_KEY`, `HACKINGTOOL_AI_PROVIDER`) always win over `config.json`.
+variables (`ONE2ONE_AI_BASE_URL`, `ONE2ONE_AI_MODEL`,
+`ONE2ONE_AI_KEY`, `ONE2ONE_AI_PROVIDER`) always win over `config.json`.
 
 ---
 
-## 7. Add a GitHub token for `/find` (`/config github`)
+## 8. Add a GitHub token for `/find` (`/config github`)
 
 Optional. It buys one thing: GitHub's search rate limit goes from **10 to 30
 requests per minute**. The token needs **no scopes and no permissions at all** —
@@ -273,21 +323,21 @@ never grant it any.
    ○ GitHub  no token configured — unauthenticated search is 10 req/min
    ```
 
-   hackingtool then prints the exact steps. They are:
+   one2one then prints the exact steps. They are:
 
 2. GitHub → your profile picture → **Settings**
 3. Left sidebar → **Developer settings**
 4. **Personal access tokens → Fine-grained tokens → Generate new token**
-5. Name it (e.g. `hackingtool-find`) and pick an expiration.
+5. Name it (e.g. `one2one-find`) and pick an expiration.
 6. Resource owner: yourself. Repository access: **leave the default — do NOT
    select any repositories.**
 7. Permissions: **select none at all.** (GitHub: *"Tokens always include
    read-only access to all public repositories on GitHub."*)
 8. Generate the token and copy it.
-9. Add it to `~/.hackingtool/.env` (the file is already `chmod 600`):
+9. Add it to `~/.one2one/.env` (the file is already `chmod 600`):
 
    ```
-   HACKINGTOOL_GITHUB_TOKEN=ghp_your-token-here
+   ONE2ONE_GITHUB_TOKEN=ghp_your-token-here
    ```
 
 10. Verify:
@@ -304,10 +354,10 @@ ever sent to `api.github.com`.
 
 ---
 
-## 8. Run tools in background panes
+## 9. Run tools in background panes
 
-Long scans shouldn't block your console. If **tmux** is installed, hackingtool
-keeps one detached session called `hackingtool` and gives each background job its
+Long scans shouldn't block your console. If **tmux** is installed, one2one
+keeps one detached session called `one2one` and gives each background job its
 own labeled window.
 
 1. Add ` &` to a `/run`:
@@ -331,12 +381,12 @@ own labeled window.
    `d` to detach and come back to the console.
 4. Stop one, or all: `/kill nmap` · `/kill all`.
 
-No tmux? Nothing breaks — hackingtool says so and opens the tool inline instead.
+No tmux? Nothing breaks — one2one says so and opens the tool inline instead.
 Turn backgrounding off entirely with `/config background_runner off`.
 
 ---
 
-## 9. Headless mode: engagements, pipelines, reports
+## 10. Headless mode: engagements, pipelines, reports
 
 The same catalog drives a non-interactive orchestrator, for CI or a scripted
 engagement. Findings are normalized into one `findings.json` you can grep, diff
@@ -344,23 +394,42 @@ or feed into other tooling.
 
 ```bash
 # create/extend an engagement and run the default recon pipeline against it
-hackingtool --engagement acme --targets example.com --pipeline recon
+one2one --engagement acme --targets example.com --pipeline recon
 
 # a file of targets, one per line
-hackingtool --engagement acme --targets ./scope.txt --pipeline recon
+one2one --engagement acme --targets ./scope.txt --pipeline recon
 
 # (re)generate the deterministic Markdown report
-hackingtool --engagement acme --report
+one2one --engagement acme --report
 
 # opt-in AI passes over the REAL findings only
-hackingtool --engagement acme --ai-summary
-hackingtool --engagement acme --ai-report     # writes report.draft.md
+one2one --engagement acme --ai-summary
+one2one --engagement acme --ai-report     # writes report.draft.md
 ```
 
-`--engagement` is required in headless mode. Out-of-scope targets are flagged and
-logged before anything runs. `--ai-summary` and `--ai-report` only ever
-summarize findings that exist — the deterministic `report.md` is never
-overwritten by the AI draft.
+`--engagement` is required in headless mode unless you're running a Mythos
+standalone flag. Out-of-scope targets are flagged and logged before anything runs.
+`--ai-summary` and `--ai-report` only ever summarize findings that exist — the
+deterministic `report.md` is never overwritten by the AI draft.
+
+Mythos has the same headless surface:
+
+```bash
+# full six-agent pipeline against engagement targets (optional content fuzzing)
+one2one --engagement acme --targets example.com --mythos --fuzz /path/to/words.txt
+
+# codebase deep-dive / binary analysis — no engagement needed
+one2one --mythos-code ./src
+one2one --mythos-binary ./challenge
+
+# standalone checks — no engagement needed
+one2one --ai-self-test        # E1 prompt-injection harness (offline-safe)
+one2one --mythos-benchmark    # H3 scanner scoring: recall / precision
+```
+
+`--ai-self-test` and `--mythos-benchmark` are fully offline; `--mythos` /
+`--mythos-code` / `--mythos-binary` hit the model only if one is configured and
+degrade to the offline scanners otherwise.
 
 ---
 
@@ -368,14 +437,15 @@ overwritten by the AI draft.
 
 | Path | Contents |
 |---|---|
-| `~/.hackingtool/config.json` | settings (`/config`) |
-| `~/.hackingtool/.env` | API key + GitHub token, mode 600 |
-| `~/.hackingtool/found.yaml` | tools you kept from `/find` |
-| `~/.hackingtool/goals/<utc-timestamp>/` | `/goal` plan, run log, step output |
-| `~/.hackingtool/tools/` | installed tools |
-| `~/.hackingtool/hackingtool.log` | command/audit log |
-| `~/.hackingtool/history` | prompt history |
+| `~/.one2one/config.json` | settings (`/config`) |
+| `~/.one2one/.env` | API key + GitHub token, mode 600 |
+| `~/.one2one/found.yaml` | tools you kept from `/find` |
+| `~/.one2one/goals/<utc-timestamp>/` | `/goal` plan, run log, step output |
+| `~/.one2one/mythos/<utc-timestamp>/` | `/mythos` findings, chains, self-test, report, PoCs |
+| `~/.one2one/tools/` | installed tools |
+| `~/.one2one/one2one.log` | command/audit log |
+| `~/.one2one/history` | prompt history |
 
 Related reading: [full tool catalog](TOOLS.md) ·
-[operator playbook](../src/hackingtool/skill/OPERATOR.md) (also `/skill`) ·
+[operator playbook](../src/one2one/skill/OPERATOR.md) (also `/skill`) ·
 [SECURITY.md](../SECURITY.md) · [CONTRIBUTING.md](../CONTRIBUTING.md)

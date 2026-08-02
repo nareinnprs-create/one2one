@@ -1,6 +1,6 @@
 ---
 name: Tool Request
-about: Suggest a new tool to be added to hackingtool
+about: Suggest a new tool to be added to one2one
 title: "[Tool Request] <ToolName> — <Category>"
 labels: tool-request
 assignees: ''

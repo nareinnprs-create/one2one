@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="images/logo.svg" alt="HackingTool" width="600">
+<img src="images/logo.svg" alt="One2One" width="600">
 
 ### AI-guided, all-in-one toolkit for authorized security testing
 
@@ -12,11 +12,11 @@ into the right tool and the exact command**.
 OSINT researchers · bug-bounty hunters · CTF players · security researchers and
 students — all working **legally, on systems they own or are authorised to test**.
 
-<a href="https://trendshift.io/repositories/869" target="_blank" rel="noopener noreferrer"><img src="https://trendshift.io/api/badge/repositories/869" alt="Z4nzu/hackingtool | Trendshift" width="250" height="55"/></a> <a href="https://trendshift.io/repositories/869" target="_blank" rel="noopener noreferrer"><img src="https://trendshift.io/api/badge/trendshift/repositories/869/daily?language=Python" alt="Z4nzu/hackingtool | Trendshift daily" width="250" height="55"/></a> <a href="https://trendshift.io/repositories/869" target="_blank" rel="noopener noreferrer"><img src="https://trendshift.io/api/badge/trendshift/repositories/869/weekly" alt="Z4nzu/hackingtool | Trendshift weekly" width="250" height="55"/></a>
+<a href="https://trendshift.io/repositories/869" target="_blank" rel="noopener noreferrer"><img src="https://trendshift.io/api/badge/repositories/869" alt="one2one/one2one | Trendshift" width="250" height="55"/></a> <a href="https://trendshift.io/repositories/869" target="_blank" rel="noopener noreferrer"><img src="https://trendshift.io/api/badge/trendshift/repositories/869/daily?language=Python" alt="one2one/one2one | Trendshift daily" width="250" height="55"/></a> <a href="https://trendshift.io/repositories/869" target="_blank" rel="noopener noreferrer"><img src="https://trendshift.io/api/badge/trendshift/repositories/869/weekly" alt="one2one/one2one | Trendshift weekly" width="250" height="55"/></a>
 
 <br/><br/>
 
-[![License](https://img.shields.io/github/license/Z4nzu/hackingtool?style=flat-square&labelColor=0D1117&color=7B61FF)](LICENSE) [![Python](https://img.shields.io/badge/Python-3.10+-0D1117?style=flat-square&labelColor=0D1117&logo=python&logoColor=7B61FF)](https://www.python.org/) [![Stars](https://img.shields.io/github/stars/Z4nzu/hackingtool?style=flat-square&labelColor=0D1117&color=7B61FF)](https://github.com/Z4nzu/hackingtool/stargazers) [![Forks](https://img.shields.io/github/forks/Z4nzu/hackingtool?style=flat-square&labelColor=0D1117&color=7B61FF)](https://github.com/Z4nzu/hackingtool/network/members) [![Issues](https://img.shields.io/github/issues/Z4nzu/hackingtool?style=flat-square&labelColor=0D1117&color=7B61FF)](https://github.com/Z4nzu/hackingtool/issues) [![Last Commit](https://img.shields.io/github/last-commit/Z4nzu/hackingtool?style=flat-square&labelColor=0D1117&color=7B61FF)](https://github.com/Z4nzu/hackingtool/commits/master) [![Sponsor](https://img.shields.io/badge/Sponsor-%E2%9D%A4-DB61A2?style=flat-square&labelColor=0D1117&logo=githubsponsors&logoColor=DB61A2)](#support--sponsor)
+[![License](https://img.shields.io/github/license/one2one/one2one?style=flat-square&labelColor=0D1117&color=7B61FF)](LICENSE) [![Python](https://img.shields.io/badge/Python-3.10+-0D1117?style=flat-square&labelColor=0D1117&logo=python&logoColor=7B61FF)](https://www.python.org/) [![Stars](https://img.shields.io/github/stars/one2one/one2one?style=flat-square&labelColor=0D1117&color=7B61FF)](https://github.com/one2one/one2one/stargazers) [![Forks](https://img.shields.io/github/forks/one2one/one2one?style=flat-square&labelColor=0D1117&color=7B61FF)](https://github.com/one2one/one2one/network/members) [![Issues](https://img.shields.io/github/issues/one2one/one2one?style=flat-square&labelColor=0D1117&color=7B61FF)](https://github.com/one2one/one2one/issues) [![Last Commit](https://img.shields.io/github/last-commit/one2one/one2one?style=flat-square&labelColor=0D1117&color=7B61FF)](https://github.com/one2one/one2one/commits/master) [![Sponsor](https://img.shields.io/badge/Sponsor-%E2%9D%A4-DB61A2?style=flat-square&labelColor=0D1117&logo=githubsponsors&logoColor=DB61A2)](#support--sponsor)
 
 <br/>
 
@@ -32,7 +32,7 @@ students — all working **legally, on systems they own or are authorised to tes
 
 ## Contents
 
-- [Why hackingtool](#why-hackingtool)
+- [Why one2one](#why-one2one)
 - [Tool Categories](#tool-categories)
 - [Installation](#installation)
   - [From source with pipx (recommended)](#from-source-with-pipx-recommended)
@@ -56,7 +56,7 @@ students — all working **legally, on systems they own or are authorised to tes
 
 ---
 
-## Why hackingtool
+## Why one2one
 
 - **🧠 AI-guided workflow** — describe what you want ("find subdomains of example.com")
   and it maps your intent to the right tools, hands you the exact documented command,
@@ -75,7 +75,7 @@ students — all working **legally, on systems they own or are authorised to tes
   forensics/IR — all on **authorized targets only**.
 
 <div align="center">
-<img src="images/screenshots/1.png" alt="hackingtool console: banner with live system readout and the / command palette" width="900">
+<img src="images/screenshots/1.png" alt="one2one console: banner with live system readout and the / command palette" width="900">
 <br/>
 <sub>The console on launch — live system readout, and <code>/</code> opens the command palette.</sub>
 </div>
@@ -119,20 +119,20 @@ every path below is a standard, verifiable install.
 
 ### From source with pipx (recommended)
 
-[pipx](https://pipx.pypa.io) installs hackingtool into its own isolated environment
-and puts the `hackingtool` command on your PATH, so you can launch it from any
+[pipx](https://pipx.pypa.io) installs one2one into its own isolated environment
+and puts the `one2one` command on your PATH, so you can launch it from any
 directory.
 
 ```bash
 # 1 — get the code
-git clone https://github.com/Z4nzu/hackingtool.git
-cd hackingtool
+git clone https://github.com/one2one/one2one.git
+cd one2one
 
 # 2 — install it onto your PATH (isolated venv, no system Python touched)
 pipx install .
 
 # 3 — run it from anywhere
-hackingtool
+one2one
 ```
 
 No pipx yet?
@@ -147,16 +147,16 @@ sudo apt install pipx && pipx ensurepath
 
 Open a new shell after `pipx ensurepath` so the PATH change takes effect.
 To update later: `git pull && pipx install . --force`. To remove it:
-`pipx uninstall hackingtool`.
+`pipx uninstall one2one`.
 
 <details>
 <summary>Alternative: <code>uv tool install .</code> (same result, uses uv instead of pipx)</summary>
 
 ```bash
-git clone https://github.com/Z4nzu/hackingtool.git
-cd hackingtool
-uv tool install .        # installs the `hackingtool` executable on your PATH
-hackingtool
+git clone https://github.com/one2one/one2one.git
+cd one2one
+uv tool install .        # installs the `one2one` executable on your PATH
+one2one
 ```
 </details>
 
@@ -164,11 +164,11 @@ hackingtool
 <summary>Alternative: plain venv + pip (no PATH changes)</summary>
 
 ```bash
-git clone https://github.com/Z4nzu/hackingtool.git
-cd hackingtool
+git clone https://github.com/one2one/one2one.git
+cd one2one
 python3 -m venv .venv && . .venv/bin/activate
 pip install .            # or: pip install -e .   for an editable dev install
-hackingtool
+one2one
 ```
 
 The command is only on your PATH while that venv is activated.
@@ -180,10 +180,10 @@ The command is only on your PATH while that venv is activated.
 `pyproject.toml` / `uv.lock` in one step:
 
 ```bash
-git clone https://github.com/Z4nzu/hackingtool.git
-cd hackingtool
+git clone https://github.com/one2one/one2one.git
+cd one2one
 uv sync
-uv run hackingtool
+uv run one2one
 ```
 
 No uv yet? `pipx install uv` (or see the
@@ -197,15 +197,15 @@ gate (lint + tests + catalog validation). See [CONTRIBUTING.md](CONTRIBUTING.md)
 Pull and run the published image:
 
 ```bash
-docker run -it --rm hardikzinzu/hackingtool:latest
+docker run -it --rm hardikzinzu/one2one:latest
 ```
 
 Or build it locally from a checkout:
 
 ```bash
-git clone https://github.com/Z4nzu/hackingtool.git && cd hackingtool
-docker build -t hackingtool .
-docker run -it --rm hackingtool
+git clone https://github.com/one2one/one2one.git && cd one2one
+docker build -t one2one .
+docker run -it --rm one2one
 ```
 
 <!-- Hidden until these distribution channels are live. Restore when the package
@@ -214,23 +214,23 @@ docker run -it --rm hackingtool
 ### pipx / pip from PyPI
 
 ```bash
-pipx install hackingtool
-hackingtool
+pipx install one2one
+one2one
 ```
 
 ```bash
 python3 -m venv .venv && . .venv/bin/activate
-pip install hackingtool
-hackingtool
+pip install one2one
+one2one
 ```
 
 ### Debian / Ubuntu / Kali (.deb)
 
-Grab the `.deb` from the [latest release](https://github.com/Z4nzu/hackingtool/releases/latest):
+Grab the `.deb` from the [latest release](https://github.com/one2one/one2one/releases/latest):
 
 ```bash
-sudo apt install ./hackingtool_*.deb
-hackingtool
+sudo apt install ./one2one_*.deb
+one2one
 ```
 -->
 
@@ -249,7 +249,7 @@ Some individual tools need a language runtime to install/run; the core app doesn
 
 ## Quick Commands
 
-Launch `hackingtool` and type. There are only three kinds of input:
+Launch `one2one` and type. There are only three kinds of input:
 
 | You type | It means | Example |
 |---|---|---|
@@ -258,7 +258,7 @@ Launch `hackingtool` and type. There are only three kinds of input:
 | anything else | plain English "what I want to do" | `crack a wifi handshake` |
 
 <div align="center">
-<img src="images/screenshots/4.png" alt="typing @ in the hackingtool console completes tool names" width="900">
+<img src="images/screenshots/4.png" alt="typing @ in the one2one console completes tool names" width="900">
 <br/>
 <sub><code>@</code> completes tool names — <code>@tag:</code> completes tags, <code>/</code> completes commands.</sub>
 </div>
@@ -272,13 +272,14 @@ Launch `hackingtool` and type. There are only three kinds of input:
 | `/tags` | | list every tag with its tool count |
 | `/ai <goal>` | `/recommend`, `/r` | recommend tools for a goal |
 | `/goal <objective>` | | AI-plan an objective and run it step by step, with per-step confirmation |
+| `/mythos <target>` | `/redteam`, `/rt` | six-agent red-team pipeline: RECON → HUNTER → ADVERSARIAL → EXPLOIT → TRIAGE → AI-SECURITY |
 | `/find <need>` | `/discover` | find tools for a need — your catalog first, then GitHub (suggest-only) |
 | `/panes` | `/jobs` | list background panes |
 | `/attach` | | attach to the background session (`Ctrl-b` `d` to return) |
 | `/kill <label\|all>` | | kill one background pane, or all of them |
 | `/config [key value]` | | view/change settings; `/config test` checks the AI connection, `/config github` checks the GitHub token |
 | `/skill` | | show the operator playbook |
-| `/update` · `/uninstall` | `/remove` | update system packages or hackingtool · remove hackingtool and its tools |
+| `/update` · `/uninstall` | `/remove` | update system packages or one2one · remove one2one and its tools |
 | `/clear` | `/cls` | clear the screen |
 | `/back` | `/b` | leave the current tool and go back |
 | `/help` | `/?`, `/h` | quick reference card |
@@ -292,14 +293,14 @@ Inside a tool: `1` install · `2` run · `c` ask for the exact command for your 
 `98` project page · `99` back.
 
 <div align="center">
-<img src="images/screenshots/5.png" alt="hackingtool /help quick reference card" width="900">
+<img src="images/screenshots/5.png" alt="one2one /help quick reference card" width="900">
 <br/>
 <sub><code>/help</code> — the same card, in the app.</sub>
 </div>
 
-On a non-interactive terminal (or without `prompt_toolkit`) hackingtool falls back to
+On a non-interactive terminal (or without `prompt_toolkit`) one2one falls back to
 the classic numbered menu, where `/` or `s` searches, `t` filters by tag, `r` or `a`
-recommends, `?` helps and `q` quits. Force it with `hackingtool --classic`.
+recommends, `?` helps and `q` quits. Force it with `one2one --classic`.
 
 > **New here?** [docs/HOW-TO-USE.md](docs/HOW-TO-USE.md) walks through each of these
 > start to finish with numbered steps.
@@ -333,7 +334,7 @@ Found on GitHub — NOT vetted by us
   …
 ```
 
-Press `a` to keep a result: it is saved to `~/.hackingtool/found.yaml` as a
+Press `a` to keep a result: it is saved to `~/.one2one/found.yaml` as a
 "Discovered tools" entry — title, tags, description, link, and **no install or run
 command**, so a discovered entry can never execute anything. It shows up in your menu
 and in `/search` next launch.
@@ -352,15 +353,41 @@ raises that to 30 — see
 /goal find live subdomains of example.com
 ```
 
-hackingtool drafts a short plan of real commands (with the reason for each step and
+one2one drafts a short plan of real commands (with the reason for each step and
 an install hint for tools you don't have), asks you to confirm you are **authorized**
 to test the target, then walks the steps: `[y]` run · `[s]` skip · `[e]` edit ·
 `[q]` abort. Every step runs list-form — never through a shell — and each goal gets a
-timestamped workspace under `~/.hackingtool/goals/` holding `plan.json`, a
+timestamped workspace under `~/.one2one/goals/` holding `plan.json`, a
 UTC-stamped `run.log`, and the raw output of each step.
 
 The model is called **once**, for planning; tool output is never fed back to it. With
 no model configured, `/goal` degrades to tool recommendations for the same objective.
+
+### 🧿 `/mythos` — six-agent red-team pipeline
+
+```
+/mythos example.com            # network/host: recon → hunter → …
+/mythos code:./src             # codebase deep-dive: offline scans + model review
+/mythos binary:./challenge     # binary analysis
+```
+
+`/mythos` runs the six-agent pipeline **RECON → HUNTER → ADVERSARIAL → EXPLOIT →
+TRIAGE → AI-SECURITY** on an authorized target. Every agent has a **closed output
+contract**: findings must use the fixed 26-class vocabulary and a three-tier
+confidence model, so the model can never invent a class. Offline deterministic
+scanners (`mythos_scan.py`) always run first and ground every agent prompt; TRIAGE
+(CVSS / tier / severity) is computed offline, never by the model; with no model
+reachable the whole run degrades to those offline scans — never fabrication.
+
+- **EXPLOIT** drafts PoCs into a sandbox workspace. For a local `code:` target they
+  can be **validated at runtime** in an isolated docker container (`--network none`,
+  read-only code mount) with explicit per-run approval, gated by
+  `/config mythos_sandbox` (default `auto`).
+- **AI-SECURITY** detects LLM-specific risks (prompt injection, RAG poisoning, tool
+  misuse, exfiltration, unsafe agent chaining) and, for network targets, runs the
+  **AI self-test** probing this app's own AI layer for injection resistance.
+- Every run lands in a timestamped workspace: `mythos_findings.json`,
+  `chains.json`, `self_test.json`, and a `mythos_report.md`.
 
 ### 🧠 Recommendations — say what you want in plain English
 
@@ -369,7 +396,7 @@ fixed taxonomy, and the catalog resolves tags → tools, so a tool can never be
 invented; with no model reachable a stdlib keyword matcher answers instead.
 
 <div align="center">
-<img src="images/screenshots/3.png" alt="hackingtool /ai — pick a common task or describe your own" width="900">
+<img src="images/screenshots/3.png" alt="one2one /ai — pick a common task or describe your own" width="900">
 <br/>
 <sub><code>/ai</code> — pick one of the common tasks, or type the job in your own words.</sub>
 </div>
@@ -380,7 +407,7 @@ invented; with no model reachable a stdlib keyword matcher answers instead.
 tools carrying it; `/search <keyword>` matches names, descriptions and tags.
 
 <div align="center">
-<img src="images/screenshots/2.png" alt="hackingtool /tags — every tag with its tool count" width="900">
+<img src="images/screenshots/2.png" alt="one2one /tags — every tag with its tool count" width="900">
 <br/>
 <sub><code>/tags</code> — 63 tags in use, with the number of tools behind each.</sub>
 </div>
@@ -388,7 +415,7 @@ tools carrying it; `/search <keyword>` matches names, descriptions and tags.
 ### ▶ Background panes (tmux)
 
 Long scans shouldn't block your console. With tmux installed, `/run <tool> … &` opens
-a labeled window in one detached `hackingtool` session:
+a labeled window in one detached `one2one` session:
 
 ```
 /run nmap -sV -oA scan 10.0.0.5 &
@@ -404,12 +431,12 @@ No tmux? It says so and opens the tool inline instead; disable it entirely with
 
 `/config` opens a full-screen settings editor (`↑↓` move, `←→` change, `Enter` edit,
 `t` test the connection, `Esc` close); `/config <key> <value>` sets one key from the
-prompt. Settings live in `~/.hackingtool/config.json`.
+prompt. Settings live in `~/.one2one/config.json`.
 
 The AI layer is **opt-in and bring-your-own-key**: an OpenAI-compatible endpoint when
 `ai_base_url` + an API key are set, else a local [Ollama](https://ollama.com), else
 nothing — every feature degrades to a deterministic offline behaviour instead of
-guessing. Your API key is written only to `~/.hackingtool/.env` (mode 600), never to
+guessing. Your API key is written only to `~/.one2one/.env` (mode 600), never to
 `config.json`, and never printed back. `/config test` reports the real failure if a
 probe fails.
 
@@ -419,10 +446,15 @@ The same catalog drives a non-interactive orchestrator that normalizes tool outp
 into one `findings.json`:
 
 ```bash
-hackingtool --engagement acme --targets example.com --pipeline recon
-hackingtool --engagement acme --report          # deterministic Markdown report
-hackingtool --engagement acme --ai-summary      # opt-in triage of the REAL findings
-hackingtool --engagement acme --ai-report       # opt-in narrative draft (report.draft.md)
+one2one --engagement acme --targets example.com --pipeline recon
+one2one --engagement acme --report          # deterministic Markdown report
+one2one --engagement acme --ai-summary      # opt-in triage of the REAL findings
+one2one --engagement acme --ai-report       # opt-in narrative draft (report.draft.md)
+one2one --engagement acme --targets example.com --mythos [--fuzz WORDLIST]
+one2one --mythos-code ./src                 # headless codebase deep-dive
+one2one --mythos-binary ./challenge         # headless binary analysis
+one2one --ai-self-test                      # E1 prompt-injection harness (no engagement)
+one2one --mythos-benchmark                  # H3 scanner scoring run (no engagement)
 ```
 
 Out-of-scope targets are flagged and logged before anything runs, and the AI passes
@@ -434,9 +466,9 @@ only ever summarize findings that exist.
 
 | Document | What's in it |
 |---|---|
-| [How to use hackingtool](docs/HOW-TO-USE.md) | numbered walkthroughs: first run, `/find`, `/goal`, `/config`, background panes, headless mode |
+| [How to use one2one](docs/HOW-TO-USE.md) | numbered walkthroughs: first run, `/find`, `/goal`, `/config`, background panes, headless mode |
 | [Tool catalog](docs/TOOLS.md) | every tool, by category, with links and tags |
-| [Operator playbook](src/hackingtool/skill/OPERATOR.md) | the charter and grounding rules the AI layer runs under (also `/skill`) |
+| [Operator playbook](src/one2one/skill/OPERATOR.md) | the charter and grounding rules the AI layer runs under (also `/skill`) |
 | [SECURITY.md](SECURITY.md) | disclosure policy, release verification, threat model |
 | [CONTRIBUTING.md](CONTRIBUTING.md) | catalog-first tool additions, the gate your PR must pass |
 
@@ -447,7 +479,7 @@ only ever summarize findings that exist.
 New tools, fixes, and docs are all welcome — for **authorized security testing** only.
 
 > **The easy path:** most tools are just **one YAML entry** in
-> `src/hackingtool/catalog/` — no Python needed. Tags come from a fixed taxonomy, so
+> `src/one2one/catalog/` — no Python needed. Tags come from a fixed taxonomy, so
 > your tool is instantly discoverable and searchable.
 
 | I want to… | Do this |
@@ -467,14 +499,14 @@ one-entry catalog walkthrough — is in **[CONTRIBUTING.md](CONTRIBUTING.md)**.
 
 <!-- Star History — enabled later.
      GitHub now restricts anonymous star-history data, so a live chart can't render.
-     To enable: open https://star-history.com/#Z4nzu/hackingtool&Date (sign in with a
+     To enable: open https://star-history.com/#one2one/one2one&Date (sign in with a
      GitHub token — it's your repo), download the chart image, save it as
      images/star-history.png, and uncomment the block below.
 
 ## Star History
 
 <div align="center">
-<a href="https://star-history.com/#Z4nzu/hackingtool&Date"><img src="images/star-history.png" alt="HackingTool Star History Chart" width="640"></a>
+<a href="https://star-history.com/#one2one/one2one&Date"><img src="images/star-history.png" alt="One2One Star History Chart" width="640"></a>
 </div>
 
 ---
@@ -482,7 +514,7 @@ one-entry catalog walkthrough — is in **[CONTRIBUTING.md](CONTRIBUTING.md)**.
 
 ## Support & Sponsor
 
-hackingtool is free and open-source. If it saves you time on an engagement or helps
+one2one is free and open-source. If it saves you time on an engagement or helps
 you learn, please consider sponsoring — funding goes to tool curation, the AI layer,
 and keeping installs safe and current.
 
@@ -495,6 +527,6 @@ and keeping installs safe and current.
 [![Twitter](https://img.shields.io/badge/Twitter-Follow-1DA1F2?style=for-the-badge&logo=twitter&logoColor=white)](https://twitter.com/_Zinzu07) [![GitHub](https://img.shields.io/badge/GitHub-Follow-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Z4nzu/)
 
 > **For authorized security testing only.**
-> Thanks to all original authors of the tools included in hackingtool.
+> Thanks to all original authors of the tools included in one2one.
 
-Your favourite tool is not listed? [Suggest it here](https://github.com/Z4nzu/hackingtool/issues/new?template=tool_request.md)
+Your favourite tool is not listed? [Suggest it here](https://github.com/one2one/one2one/issues/new?template=tool_request.md)

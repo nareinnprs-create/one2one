@@ -1,7 +1,7 @@
 # Security Policy
 
-`hackingtool` is a launcher and guidance layer for **authorized** security testing.
-This policy covers vulnerabilities **in hackingtool itself** — not in the third-party
+`one2one` is a launcher and guidance layer for **authorized** security testing.
+This policy covers vulnerabilities **in one2one itself** — not in the third-party
 tools it can install or run.
 
 ## Supported versions
@@ -20,7 +20,7 @@ current `master` / latest PyPI release before reporting.
 
 Report privately through GitHub's private advisory flow:
 
-➡ **https://github.com/Z4nzu/hackingtool/security/advisories/new**
+➡ **https://github.com/one2one/one2one/security/advisories/new**
 
 Include:
 
@@ -35,7 +35,7 @@ release notes unless you ask us not to.
 
 ## What's in scope
 
-Vulnerabilities in **hackingtool's own code**, for example:
+Vulnerabilities in **one2one's own code**, for example:
 
 - **Command / argument injection** in the launcher, orchestrator, or any place user
   or catalog input reaches a subprocess.
@@ -45,17 +45,17 @@ Vulnerabilities in **hackingtool's own code**, for example:
   makes the model fabricate, exfiltrate, or drive an action outside its guardrails —
   see [OWASP LLM01: Prompt Injection](https://owasp.org/www-project-top-10-for-large-language-model-applications/).
 - **Privilege / path issues** — unexpected `sudo`, writing outside the user's
-  `~/.hackingtool/` workspace, world-writable files, symlink traversal.
+  `~/.one2one/` workspace, world-writable files, symlink traversal.
 - **Catalog integrity** — a catalog/overlay entry that ships an unsafe command, an
   unpinned installer, or a fabricated invocation.
 
 ## What's out of scope
 
 - **The third-party tools themselves.** A bug in nmap, sqlmap, hashcat, etc. belongs
-  to that project — report it upstream. hackingtool only launches them.
+  to that project — report it upstream. one2one only launches them.
 - **"This software can be used to attack things."** That is the nature of an
   ethical-hacking toolkit. Misuse by an operator against systems they are not
-  authorized to test is not a vulnerability in hackingtool. See
+  authorized to test is not a vulnerability in one2one. See
   [Authorized use](#authorized-use).
 - Findings that require an already-compromised host or physical access.
 - Reports from automated scanners with no demonstrated impact.
@@ -67,10 +67,10 @@ both attested via Sigstore. Verify what you install:
 
 ```bash
 # PyPI wheel/sdist and the GitHub release .deb carry build-provenance attestations
-gh attestation verify <artifact> --repo Z4nzu/hackingtool
+gh attestation verify <artifact> --repo one2one/one2one
 
-# The SBOM (attached to each GitHub release as hackingtool.cdx.json) is attested too
-gh attestation verify dist/hackingtool-*.whl --repo Z4nzu/hackingtool --predicate-type https://cyclonedx.org/bom
+# The SBOM (attached to each GitHub release as one2one.cdx.json) is attested too
+gh attestation verify dist/one2one-*.whl --repo one2one/one2one --predicate-type https://cyclonedx.org/bom
 ```
 
 PyPI uploads additionally carry [PEP 740](https://peps.python.org/pep-0740/) digital
@@ -78,7 +78,7 @@ attestations, generated automatically via Trusted Publishing.
 
 ## Authorized use
 
-hackingtool is for security testing you are **legally authorized** to perform —
+one2one is for security testing you are **legally authorized** to perform —
 your own systems, an engagement with written scope, a lab, or a CTF. Using it against
 systems you do not own or have explicit permission to test is illegal and is not a
 use we support. Every feature assumes authorized-targets-only, no blanket root, and no

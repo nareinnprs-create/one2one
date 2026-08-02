@@ -1,7 +1,7 @@
 import json
 from pathlib import Path
-import hackingtool.findings as findings
-from hackingtool.findings import Finding, parse_subfinder, parse_httpx, parse_nuclei, save_findings, load_findings
+import one2one.findings as findings
+from one2one.findings import Finding, parse_subfinder, parse_httpx, parse_nuclei, save_findings, load_findings
 
 TS = "2026-07-05T00:00:00+00:00"
 

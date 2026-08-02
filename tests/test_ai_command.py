@@ -1,5 +1,5 @@
 """AI2 build_command: curated-first, AI-gap fill, anti-fabrication binary guard."""
-import hackingtool.ai_command as ai_command
+import one2one.ai_command as ai_command
 
 USAGE = [
     ("crack MD5 with a wordlist", "hashcat -m 0 -a 0 hash.txt rockyou.txt"),

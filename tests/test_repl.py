@@ -1,7 +1,7 @@
 """Tests for the inline REPL front-end (navigation only — no tool side effects)."""
 import types
 
-from hackingtool import repl
+from one2one import repl
 
 
 # ── Fakes ────────────────────────────────────────────────────────────────────
@@ -32,9 +32,9 @@ def test_completer_commands():
 
 
 def test_history_persists_to_file(tmp_path, monkeypatch):
-    """↑↓ history is backed by a FileHistory at ~/.hackingtool/history."""
+    """↑↓ history is backed by a FileHistory at ~/.one2one/history."""
     from prompt_toolkit.history import FileHistory
-    from hackingtool import prompt, constants
+    from one2one import prompt, constants
     hist = tmp_path / "history"
     monkeypatch.setattr(constants, "USER_HISTORY_FILE", hist)
     prompt._session.cache_clear()
@@ -85,14 +85,14 @@ def test_dispatch_quit_returns_false():
 
 
 def test_open_mention_opens_tool():
-    from hackingtool import prompt
+    from one2one import prompt
     tool = _fake_tool("Nmap")
     prompt.open_mention("@nmap", tools_by_title={"Nmap": tool}, tag_index={})
     assert tool.opened is True
 
 
 def test_run_command_opens_tool():
-    from hackingtool import prompt
+    from one2one import prompt
     tool = _fake_tool("Nmap")
     sig = prompt.dispatch("/run nmap", prompt.PromptCtx("home"))
     assert sig == prompt.Open("@nmap")
@@ -101,16 +101,16 @@ def test_run_command_opens_tool():
 
 
 def test_dispatch_free_text_recommends(monkeypatch):
-    from hackingtool import prompt
+    from one2one import prompt
     seen = {}
-    import hackingtool.cli as cli
+    import one2one.cli as cli
     monkeypatch.setattr(cli, "recommend_tools", lambda intent=None: seen.setdefault("intent", intent))
     prompt.dispatch("crack a wifi handshake", prompt.PromptCtx("home"))
     assert seen["intent"] == "crack a wifi handshake"
 
 
 def test_dispatch_tags_lists(monkeypatch):
-    from hackingtool import prompt
+    from one2one import prompt
     called = {}
     monkeypatch.setattr(prompt, "show_all_tags", lambda idx: called.setdefault("hit", True))
     prompt.dispatch("/tags", prompt.PromptCtx("home"))
@@ -122,8 +122,8 @@ def test_find_is_completable_and_documented():
 
 
 def test_dispatch_find_routes_to_discover_run(monkeypatch):
-    from hackingtool import prompt
-    import hackingtool.discover as discover
+    from one2one import prompt
+    import one2one.discover as discover
     seen = {}
     monkeypatch.setattr(discover, "run", lambda need, ctx=None: seen.setdefault("need", need))
     ctx = prompt.PromptCtx("home")

@@ -6,9 +6,9 @@ from pathlib import Path
 import pytest
 import yaml
 
-from hackingtool import discover
-from hackingtool.catalog_owners import CATALOG_OWNERS
-from hackingtool.tags import TAXONOMY
+from one2one import discover
+from one2one.catalog_owners import CATALOG_OWNERS
+from one2one.tags import TAXONOMY
 
 NOW = datetime(2026, 7, 26, tzinfo=timezone.utc)
 
@@ -134,7 +134,7 @@ def test_generated_owners_file_is_current():
     sys.path.insert(0, "scripts")
     import gen_catalog_owners as gen
     from pathlib import Path
-    assert gen.render(gen.collect()) == Path(gen.OUT).read_text()
+    assert gen.render(gen.collect()) == Path(gen.OUT).read_text(encoding="utf-8")
 
 
 def test_known_good_owners_are_present():
@@ -468,7 +468,7 @@ def test_empty_need_is_handled(monkeypatch):
 
 
 def test_token_never_appears_in_a_cache_key(monkeypatch):
-    monkeypatch.setenv("HACKINGTOOL_GITHUB_TOKEN", "ghp_supersecret")
+    monkeypatch.setenv("ONE2ONE_GITHUB_TOKEN", "ghp_supersecret")
     key = discover._cache_key("topic:fuzzing web fuzzer")
     assert "ghp_supersecret" not in key
     assert "supersecret" not in key
@@ -579,7 +579,7 @@ _SAVE_REPO = dict(
 
 
 def test_save_repo_never_raises_on_unwritable_dir(tmp_path, monkeypatch):
-    """A read-only ~/.hackingtool must not crash the REPL on 'a'."""
+    """A read-only ~/.one2one must not crash the REPL on 'a'."""
     monkeypatch.setattr(discover, "_found_path", lambda: tmp_path / "ro" / "found.yaml")
     monkeypatch.setattr(Path, "mkdir",
                          lambda *a, **kw: (_ for _ in ()).throw(PermissionError("denied")))
@@ -614,7 +614,7 @@ def test_run_reports_save_failure_instead_of_claiming_success(capsys, monkeypatc
                          lambda url: {"total_count": 1, "items": [_ITEM]})
     monkeypatch.setattr(discover, "save_repo", lambda repo, tags: None)
     monkeypatch.setattr("sys.stdin.isatty", lambda: True)
-    from hackingtool import prompt
+    from one2one import prompt
     answers = iter(["a", "1"])
     monkeypatch.setattr(prompt, "simple", lambda *_a, **_kw: next(answers))
     discover.run("find hidden directories on a website")
@@ -624,7 +624,7 @@ def test_run_reports_save_failure_instead_of_claiming_success(capsys, monkeypatc
 
 
 def test_malformed_user_catalog_does_not_break_the_shipped_catalog(tmp_path):
-    from hackingtool import registry
+    from one2one import registry
     (tmp_path / "found.yaml").write_text("{ this is not: valid: yaml: [[[")
     reg = registry.load(user_dir=tmp_path)
     assert reg.categories, "shipped catalog must still load"
@@ -634,7 +634,7 @@ def test_tampered_user_catalog_entry_is_still_inert(tmp_path):
     """save_repo() writes no install/run keys — but the loader must not trust
     that the file on disk is still what we wrote. Anyone who can edit
     found.yaml must not thereby gain a runnable command."""
-    from hackingtool import registry
+    from one2one import registry
     (tmp_path / "found.yaml").write_text(yaml.safe_dump({
         "category": {"title": "Found", "merge_into": "Others"},
         "tools": [{

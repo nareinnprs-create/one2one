@@ -1,4 +1,4 @@
-"""Regenerate src/hackingtool/catalog_owners.py from tools we already ship.
+"""Regenerate src/one2one/catalog_owners.py from tools we already ship.
 
 The owners of tools we curated are a free, self-maintaining trusted-author
 signal for /find: nothing in GitHub metadata separates a professional tool
@@ -10,7 +10,7 @@ A test asserts the committed file matches a fresh run, so it cannot rot.
 import re
 from pathlib import Path
 
-SRC = Path(__file__).resolve().parent.parent / "src" / "hackingtool"
+SRC = Path(__file__).resolve().parent.parent / "src" / "one2one"
 OUT = SRC / "catalog_owners.py"
 # (?<!api\.) drops api.github.com/... URLs entirely (e.g. .../repos/mozilla/...,
 # .../search/repositories) rather than misreading their path segments as owners.
@@ -32,7 +32,7 @@ def collect() -> list[str]:
     owners = set()
     for p in sorted(SRC.rglob("*")):
         if p.suffix in (".yaml", ".py") and p.is_file() and p.name != OUT.name:
-            found = _URL.findall(p.read_text(errors="ignore"))
+            found = _URL.findall(p.read_text(errors="ignore", encoding="utf-8"))
             owners.update(o for o in found if o.lower() not in _NOT_OWNERS)
     return sorted(owners, key=str.lower)
 
@@ -44,5 +44,5 @@ def render(owners: list[str]) -> str:
 
 if __name__ == "__main__":
     owners = collect()
-    OUT.write_text(render(owners))
+    OUT.write_text(render(owners), encoding="utf-8")
     print(f"wrote {OUT} — {len(owners)} owners")

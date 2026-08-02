@@ -1,20 +1,20 @@
 # docker-compose.yml
-# Run the interactive TUI:  docker compose run --rm hackingtool
+# Run the interactive TUI:  docker compose run --rm one2one
 # Or pull the published image instead of building:
-#   docker run -it --rm ghcr.io/z4nzu/hackingtool:latest
+#   docker run -it --rm ghcr.io/one2one/one2one:latest
 
 services:
-  hackingtool:
+  one2one:
     build:
       context: .
       dockerfile: Dockerfile
-    image: ghcr.io/z4nzu/hackingtool:latest
-    container_name: hackingtool
+    image: ghcr.io/one2one/one2one:latest
+    container_name: one2one
     stdin_open: true
     tty: true
     # Persist tools installed at runtime across container restarts.
     volumes:
-      - hackingtool_data:/root/.hackingtool
+      - one2one_data:/root/.one2one
 
 volumes:
-  hackingtool_data:
+  one2one_data:

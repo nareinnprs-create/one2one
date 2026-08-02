@@ -1,22 +1,22 @@
 # Tool catalog
 
-Every tool hackingtool can install, launch, or point you at — **215 active tools
+Every tool one2one can install, launch, or point you at — **215 active tools
 across 21 categories**, plus 59 archived entries kept out of this list (they are
 unmaintained or dead upstream and are hidden in the app unless you set
 `show_archived true` via `/config`).
 
-Tags under each entry come from the fixed taxonomy in `src/hackingtool/tags.py`
+Tags under each entry come from the fixed taxonomy in `src/one2one/tags.py`
 (63 tags in use). Inside the app you can filter by any of them with
 `@tag:<name>`, or search names/descriptions/tags with `/search <keyword>`.
 
 Entries marked as a link point at the upstream project; a few are curated
 reference resources (labs, cheat sheets, online services) rather than installable
-binaries — hackingtool opens those instead of installing them.
+binaries — one2one opens those instead of installing them.
 
 > **Authorized targets only.** Every tool here is for systems you own or have
 > written permission to test.
 
-Back to the [README](../README.md) · [How to use hackingtool](HOW-TO-USE.md)
+Back to the [README](../README.md) · [How to use one2one](HOW-TO-USE.md)
 
 ---
 
@@ -302,7 +302,7 @@ Back to the [README](../README.md) · [How to use hackingtool](HOW-TO-USE.md)
 
 ## Adding a tool
 
-Most tools are **one YAML entry** in `src/hackingtool/catalog/` — no Python. See
+Most tools are **one YAML entry** in `src/one2one/catalog/` — no Python. See
 [CONTRIBUTING.md](../CONTRIBUTING.md) for the entry format, the tag taxonomy, and
 the checks your PR has to pass (`make check`).
 

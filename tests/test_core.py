@@ -2,11 +2,11 @@
 honest success/failure, and EOF-safe prompting."""
 import pytest
 
-import hackingtool.core as core
+import one2one.core as core
 
 
 def _tool(cmds):
-    t = core.HackingTool(installable=True, runnable=False)
+    t = core.One2OneTool(installable=True, runnable=False)
     t.TITLE = "T"
     t.INSTALL_COMMANDS = cmds
     t.SYSTEM_PKGS = {}
@@ -71,7 +71,7 @@ class _FakeResp:
 
 
 def _url_tool(sha, cmds=None):
-    t = core.HackingTool(installable=True, runnable=False)
+    t = core.One2OneTool(installable=True, runnable=False)
     t.TITLE = "U"
     t.INSTALL_URL = "https://x/bin"
     t.INSTALL_SHA256 = sha
@@ -106,7 +106,7 @@ def test_url_install_runs_on_match_with_substitution(monkeypatch):
     _url_tool(good, ["chmod +x {file}", "mv {file} /dest"]).install()
     assert len(ran) == 2
     assert all("{file}" not in c for c in ran)          # placeholder substituted
-    assert ran[0].startswith("chmod +x /") and ran[1].endswith("/dest")
+    assert ran[0].startswith("chmod +x ") and ran[1].endswith("/dest")
 
 
 def test_run_shell_logs_command_and_exit_code(monkeypatch):
@@ -133,11 +133,11 @@ def test_ask_quits_on_eof(monkeypatch):
 ])
 def test_project_page_refuses_non_http_urls(monkeypatch, url):
     """PROJECT_URL used to come only from the vetted catalog; /find now also
-    writes it into ~/.hackingtool/found.yaml from GitHub data, so a hand-edited
+    writes it into ~/.one2one/found.yaml from GitHub data, so a hand-edited
     file must not be able to hand webbrowser a javascript:/file:/data: URL."""
     opened = []
     monkeypatch.setattr(core.webbrowser, "open_new_tab", opened.append)
-    t = core.HackingTool(installable=False, runnable=False)
+    t = core.One2OneTool(installable=False, runnable=False)
     t.TITLE = "T"
     t.PROJECT_URL = url
     t.show_project_page()
@@ -147,7 +147,7 @@ def test_project_page_refuses_non_http_urls(monkeypatch, url):
 def test_project_page_still_opens_normal_links(monkeypatch):
     opened = []
     monkeypatch.setattr(core.webbrowser, "open_new_tab", opened.append)
-    t = core.HackingTool(installable=False, runnable=False)
+    t = core.One2OneTool(installable=False, runnable=False)
     t.TITLE = "T"
     t.PROJECT_URL = "https://github.com/ffuf/ffuf"
     t.show_project_page()

@@ -1,6 +1,6 @@
-import hackingtool.ai_summary as ai_summary
-import hackingtool.engagement as engagement
-from hackingtool.findings import Finding, save_findings
+import one2one.ai_summary as ai_summary
+import one2one.engagement as engagement
+from one2one.findings import Finding, save_findings
 
 
 def _root(tmp_path, monkeypatch):

@@ -98,7 +98,7 @@ INSTALL_HINT = {
 def _get(url: str, token: str | None) -> tuple[int, object]:
     """GET a GitHub API URL. Returns (status, parsed-json-or-None). Never raises."""
     req = urllib.request.Request(url, headers={
-        "Accept": "application/vnd.github+json", "User-Agent": "hackingtool-discover"})
+        "Accept": "application/vnd.github+json", "User-Agent": "one2one-discover"})
     if token:
         req.add_header("Authorization", f"Bearer {token}")
     try:

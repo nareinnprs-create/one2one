@@ -8,8 +8,8 @@ import textwrap
 
 import pytest
 
-import hackingtool.registry as registry
-import hackingtool.tags as tags
+import one2one.registry as registry
+import one2one.tags as tags
 
 
 # --- real catalog (the shipped YAML files) ----------------------------------
@@ -128,7 +128,7 @@ def test_overlay_enriches_existing_tool_by_title(tmp_path):
 
 def test_shipped_nmap_overlay_applies():
     """The real catalog overlay reaches the Python-defined NMAP tool."""
-    import hackingtool.cli as h
+    import one2one.cli as h
     nmap = next(t for t, _ in h._collect_all_tools() if t.TITLE == "Network Map (nmap)")
     assert nmap.USAGE, "nmap should get a usage cheatsheet from the overlay"
     assert nmap.SYSTEM_PKGS.get("which") == "nmap"

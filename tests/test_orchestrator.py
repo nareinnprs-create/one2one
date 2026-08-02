@@ -1,7 +1,7 @@
 import json
 import subprocess
-import hackingtool.engagement as engagement
-import hackingtool.orchestrator as orchestrator
+import one2one.engagement as engagement
+import one2one.orchestrator as orchestrator
 
 def _root(tmp_path, monkeypatch):
     monkeypatch.setattr(engagement, "ENGAGEMENTS_ROOT", tmp_path)

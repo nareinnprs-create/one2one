@@ -44,7 +44,7 @@ inappropriate, threatening, offensive, or harmful.
 
 Report abusive, harassing, or otherwise unacceptable behavior privately to the
 maintainers through GitHub's private report flow:
-**https://github.com/Z4nzu/hackingtool/security/advisories/new**. All complaints will
+**https://github.com/one2one/one2one/security/advisories/new**. All complaints will
 be reviewed and investigated promptly and fairly. Maintainers must respect the privacy
 and security of the reporter of any incident.
 

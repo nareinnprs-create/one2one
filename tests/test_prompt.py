@@ -1,8 +1,8 @@
 """Tests for the shared input surface (offline — no TTY, no model)."""
 import types
 
-from hackingtool import prompt
-from hackingtool.prompt import PromptCtx, CONTINUE, QUIT, BACK, Open
+from one2one import prompt
+from one2one.prompt import PromptCtx, CONTINUE, QUIT, BACK, Open
 
 
 def _fake_tool(title):
@@ -71,7 +71,7 @@ def test_dispatch_tag_mention_returns_open():
 
 def test_bare_text_home_calls_ai1(monkeypatch):
     seen = {}
-    import hackingtool.cli as cli
+    import one2one.cli as cli
     monkeypatch.setattr(cli, "recommend_tools", lambda intent=None: seen.setdefault("i", intent))
     assert prompt.dispatch("crack a wifi handshake", PromptCtx("home")) is CONTINUE
     assert seen["i"] == "crack a wifi handshake"
@@ -133,7 +133,7 @@ class _FakeTool:
 
 
 def test_run_background_when_enabled(monkeypatch):
-    from hackingtool import prompt, session, repl
+    from one2one import prompt, session, repl
     rec = {}
     monkeypatch.setattr(session, "enabled", lambda: True)
 
@@ -150,7 +150,7 @@ def test_run_background_when_enabled(monkeypatch):
 
 
 def test_run_bare_tool_background_no_command(monkeypatch):
-    from hackingtool import prompt, session, repl
+    from one2one import prompt, session, repl
     rec = {}
     monkeypatch.setattr(session, "enabled", lambda: True)
     monkeypatch.setattr(session, "run",
@@ -163,20 +163,20 @@ def test_run_bare_tool_background_no_command(monkeypatch):
 
 
 def test_run_background_falls_back_when_disabled(monkeypatch):
-    from hackingtool import prompt, session
+    from one2one import prompt, session
     monkeypatch.setattr(session, "enabled", lambda: False)
     assert prompt.dispatch("/run nmap &", prompt.PromptCtx("home")) == prompt.Open("@nmap")
 
 
 def test_run_background_with_args_falls_back_to_tool_token(monkeypatch):
-    from hackingtool import prompt, session
+    from one2one import prompt, session
     monkeypatch.setattr(session, "enabled", lambda: False)
     sig = prompt.dispatch("/run nmap -sV host &", prompt.PromptCtx("home"))
     assert sig == prompt.Open("@nmap")     # tool token only, not the full arg string
 
 
 def test_panes_routes(monkeypatch):
-    from hackingtool import prompt, session
+    from one2one import prompt, session
     called = {}
     monkeypatch.setattr(session, "windows", lambda: called.setdefault("w", True) and [])
     assert prompt.dispatch("/panes", prompt.PromptCtx("home")) is prompt.CONTINUE
@@ -184,7 +184,7 @@ def test_panes_routes(monkeypatch):
 
 
 def test_attach_routes(monkeypatch):
-    from hackingtool import prompt, session
+    from one2one import prompt, session
     called = {}
     monkeypatch.setattr(session, "attach", lambda: called.setdefault("a", True))
     prompt.dispatch("/attach", prompt.PromptCtx("home"))
@@ -192,7 +192,7 @@ def test_attach_routes(monkeypatch):
 
 
 def test_kill_routes(monkeypatch):
-    from hackingtool import prompt, session
+    from one2one import prompt, session
     killed = {}
     monkeypatch.setattr(session, "kill", lambda t: killed.setdefault("t", t))
     prompt.dispatch("/kill nmap", prompt.PromptCtx("home"))
@@ -200,8 +200,8 @@ def test_kill_routes(monkeypatch):
 
 
 def test_config_routes(monkeypatch):
-    from hackingtool import prompt
-    import hackingtool.cli as cli
+    from one2one import prompt
+    import one2one.cli as cli
     got = {}
     monkeypatch.setattr(cli, "config_command", lambda arg="": got.setdefault("arg", arg))
     prompt.dispatch("/config background_runner off", prompt.PromptCtx("home"))
@@ -209,7 +209,7 @@ def test_config_routes(monkeypatch):
 
 
 def test_status_shows_running(monkeypatch):
-    from hackingtool import prompt, session
+    from one2one import prompt, session
     monkeypatch.setattr(session, "enabled", lambda: True)
     monkeypatch.setattr(session, "count", lambda: 3)
     prompt._RUNNING_CACHE["at"] = 0.0     # bust the TTL cache

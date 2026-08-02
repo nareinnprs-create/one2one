@@ -1,12 +1,12 @@
 # syntax=docker/dockerfile:1
 # Kali base: many bundled tools already present, and it's the platform this
-# audience runs. The image installs hackingtool as a proper package (console
-# entry point `hackingtool`), not the old `python3 hackingtool.py` flat script.
+# audience runs. The image installs one2one as a proper package (console
+# entry point `one2one`), not the old `python3 one2one.py` flat script.
 FROM kalilinux/kali-rolling:latest
 
-LABEL org.opencontainers.image.title="hackingtool" \
-      org.opencontainers.image.description="All-in-One Hacking Tool for Security Researchers" \
-      org.opencontainers.image.source="https://github.com/Z4nzu/hackingtool" \
+LABEL org.opencontainers.image.title="one2one" \
+      org.opencontainers.image.description="All-in-One One2One for Security Researchers" \
+      org.opencontainers.image.source="https://github.com/one2one/one2one" \
       org.opencontainers.image.licenses="MIT"
 
 # Runtime system deps: python + git (tools clone their own repos) + php/curl/wget
@@ -21,12 +21,12 @@ WORKDIR /src
 COPY pyproject.toml README.md ./
 COPY src ./src
 # PEP 668 (externally-managed) on Kali → --break-system-packages. This installs
-# the `hackingtool` console script onto PATH and ships catalog/*.yaml +
+# the `one2one` console script onto PATH and ships catalog/*.yaml +
 # pipelines/*.yaml as package data (resolved at runtime via __file__).
 RUN --mount=type=cache,target=/root/.cache/pip \
     pip3 install --break-system-packages .
 
 # Tools install their payloads at runtime under here; persist via a volume.
-RUN mkdir -p /root/.hackingtool/tools
+RUN mkdir -p /root/.one2one/tools
 WORKDIR /root
-ENTRYPOINT ["hackingtool"]
+ENTRYPOINT ["one2one"]

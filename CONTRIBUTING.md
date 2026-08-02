@@ -1,6 +1,6 @@
-# Contributing to hackingtool
+# Contributing to one2one
 
-Thanks for helping. hackingtool serves the whole ethical-hacking spectrum —
+Thanks for helping. one2one serves the whole ethical-hacking spectrum —
 offensive/red-team, defensive/blue-team, OSINT, bug-bounty, CTF/THM learners,
 forensics/IR — all working **legally and with authorization**. Contributions should
 help each of those users in their own workflow.
@@ -16,16 +16,16 @@ These are enforced in review and, where possible, by CI:
 - **List-form `subprocess` only.** Never `shell=True` with interpolated input.
 - **Pin + verify external downloads.** Fetches are pinned and SHA-256 checked.
   **No `curl | bash`, ever.**
-- **No forced `sudo`.** Tools install into `~/.hackingtool/`, not system paths.
+- **No forced `sudo`.** Tools install into `~/.one2one/`, not system paths.
 - **Linux/macOS first.** Deprioritize Windows-only `.exe` tools.
 
 ## Dev setup
 
 ```bash
-git clone https://github.com/Z4nzu/hackingtool.git
-cd hackingtool
+git clone https://github.com/one2one/one2one.git
+cd one2one
 make setup            # one-time: point git at .githooks (pre-push runs the gate)
-uv run hackingtool    # run from source (uv provides rich/pyyaml/platformdirs)
+uv run one2one    # run from source (uv provides rich/pyyaml/platformdirs)
 ```
 
 ## The gate — run it before every PR
@@ -44,7 +44,7 @@ There are two paths. **Prefer the catalog** — it's data-driven and one entry, 
 
 ### 1. Catalog entry (preferred)
 
-Add or extend a YAML file in `src/hackingtool/catalog/`. You can define a new tool or
+Add or extend a YAML file in `src/one2one/catalog/`. You can define a new tool or
 **overlay** guidance onto an existing one (matched by exact `title`):
 
 ```yaml
@@ -56,7 +56,7 @@ overlay:
       - ["clean output for pipelines", "subfinder -d <domain> -silent"]
 ```
 
-- **Tags** must all exist in `src/hackingtool/tags.py` `TAXONOMY` — the single
+- **Tags** must all exist in `src/one2one/tags.py` `TAXONOMY` — the single
   discovery vocabulary. Propose a new tag in that file only when a tool needs it.
 - **`usage`** is `[description, command]` pairs. Commands must be canonical and
   documented; use placeholders (`<domain>`, `<target>`) for operator-supplied values.

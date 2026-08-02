@@ -2,7 +2,7 @@
 """
 M1 — Tool-list curation audit.
 
-Statically parses every HackingTool subclass in tools/, extracts its PROJECT_URL
+Statically parses every One2OneTool subclass in tools/, extracts its PROJECT_URL
 (and the git-clone URL from INSTALL_COMMANDS), then queries the GitHub API for
 each unique repo's maintenance signals (last push, archived flag, stars, 404).
 Classifies each tool KEEP / STALE / DEAD / REFRESH-URL / ARCHIVED / MANUAL and
@@ -60,7 +60,7 @@ def gh_repo(url: str) -> str | None:
 
 
 def parse_tools() -> list[dict]:
-    """Extract one record per HackingTool-ish class that declares a PROJECT_URL."""
+    """Extract one record per One2OneTool-ish class that declares a PROJECT_URL."""
     records = []
     for path in sorted(TOOLS_DIR.rglob("*.py")):
         text = path.read_text(encoding="utf-8", errors="replace")
@@ -106,7 +106,7 @@ def fetch_repo(repo: str, token: str | None) -> dict:
     req = urllib.request.Request(
         f"https://api.github.com/repos/{repo}",
         headers={"Accept": "application/vnd.github+json",
-                 "User-Agent": "hackingtool-audit"},
+                 "User-Agent": "one2one-audit"},
     )
     if token:
         req.add_header("Authorization", f"Bearer {token}")

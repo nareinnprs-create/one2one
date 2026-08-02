@@ -1,6 +1,6 @@
-import hackingtool.ai_report as ai_report
-import hackingtool.engagement as engagement
-from hackingtool.findings import Finding, save_findings
+import one2one.ai_report as ai_report
+import one2one.engagement as engagement
+from one2one.findings import Finding, save_findings
 
 
 def _root(tmp_path, monkeypatch):
@@ -35,7 +35,7 @@ def test_draft_has_narrative_and_deterministic_appendix(tmp_path, monkeypatch):
     monkeypatch.setattr(ai_report, "ask",
                         lambda p: "## Executive Summary\nOne high issue on a.example.com.")
     path = ai_report.draft_report(e)
-    text = path.read_text()
+    text = path.read_text(encoding="utf-8")
     assert path == e.report_draft_file
     assert "AI DRAFT" in text and "verify before use" in text          # labeled, non-authoritative
     assert "One high issue on a.example.com." in text                  # model narrative
@@ -65,7 +65,7 @@ def test_groundedness_flags_foreign_host(tmp_path, monkeypatch):
     # Simulate an injected/hallucinated host in the narrative.
     monkeypatch.setattr(ai_report, "ask",
                         lambda p: "See http://evil.attacker.com/x for the payout.")
-    text = ai_report.draft_report(e).read_text()
+    text = ai_report.draft_report(e).read_text(encoding="utf-8")
     assert "Ungrounded" in text and "evil.attacker.com" in text
 
 

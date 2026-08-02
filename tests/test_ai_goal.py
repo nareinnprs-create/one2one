@@ -1,7 +1,7 @@
 import json
 import subprocess
 
-from hackingtool import ai_goal, skill
+from one2one import ai_goal, skill
 
 
 def test_validate_keeps_wellformed_and_sets_installed(monkeypatch):
@@ -186,7 +186,7 @@ def test_run_falls_back_to_recommend_when_no_model(monkeypatch):
     hit = {}
     monkeypatch.setattr(ai_goal, "_toolbox", lambda: [])
     monkeypatch.setattr(ai_goal, "plan", lambda obj, box: None)   # no model
-    import hackingtool.cli as cli
+    import one2one.cli as cli
     monkeypatch.setattr(cli, "recommend_tools", lambda intent: hit.setdefault("intent", intent))
     ai_goal.run("crack a hash")
     assert hit["intent"] == "crack a hash"
@@ -258,7 +258,7 @@ def test_run_edit_audits_the_edited_command(monkeypatch, tmp_path):
 
 
 def test_dispatch_routes_goal(monkeypatch):
-    from hackingtool import prompt
+    from one2one import prompt
     seen = {}
     monkeypatch.setattr(ai_goal, "run", lambda obj, ctx=None: seen.setdefault("obj", obj))
     sig = prompt.dispatch("/goal find subdomains of x.com", prompt.PromptCtx("home"))
@@ -267,7 +267,7 @@ def test_dispatch_routes_goal(monkeypatch):
 
 
 def test_goal_is_a_listed_command():
-    from hackingtool import repl
+    from one2one import repl
     assert "/goal" in repl._COMMANDS
 
 

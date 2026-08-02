@@ -39,13 +39,13 @@ jobs:
         run: twine check dist/*
       - name: Generate CycloneDX SBOM
         # Install the built wheel into a throwaway env and snapshot its real
-        # dependency closure (hackingtool + rich + pyyaml + platformdirs + transitives).
+        # dependency closure (one2one + rich + pyyaml + platformdirs + transitives).
         run: |
           python -m venv /tmp/sbomenv
           /tmp/sbomenv/bin/pip install --upgrade pip
           /tmp/sbomenv/bin/pip install dist/*.whl
           mkdir -p sbom
-          cyclonedx-py environment /tmp/sbomenv --of JSON -o sbom/hackingtool.cdx.json
+          cyclonedx-py environment /tmp/sbomenv --of JSON -o sbom/one2one.cdx.json
       - name: Attest build provenance
         uses: actions/attest-build-provenance@e8998f949152b193b063cb0ec769d69d929409be # v2
         with:
@@ -54,7 +54,7 @@ jobs:
         uses: actions/attest-sbom@bd218ad0dbcb3e146bd073d1d9c6d78e08aa8a0b # v2
         with:
           subject-path: "dist/*.whl"
-          sbom-path: "sbom/hackingtool.cdx.json"
+          sbom-path: "sbom/one2one.cdx.json"
       - name: Upload dist
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
@@ -71,12 +71,12 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     # One-time owner setup: on PyPI, add this repo as a Trusted Publisher for the
-    # `hackingtool` project (Publishing → Add a pending publisher). No API token
+    # `one2one` project (Publishing → Add a pending publisher). No API token
     # or secret is stored — OIDC below authenticates the upload, and PEP 740
     # attestations are generated and published automatically.
     environment:
       name: pypi
-      url: https://pypi.org/p/hackingtool
+      url: https://pypi.org/p/one2one
     permissions:
       id-token: write
     steps:
@@ -144,7 +144,7 @@ jobs:
           sudo gem install --no-document fpm
       - name: Build .deb from the sdist
         run: |
-          sdist=$(ls dist/hackingtool-*.tar.gz)
+          sdist=$(ls dist/one2one-*.tar.gz)
           fpm -s python -t deb \
             --python-bin python3 \
             --python-pip "$(command -v pip3)" \
@@ -153,10 +153,10 @@ jobs:
             --maintainer "Z4nzu" \
             --license MIT \
             --description "All-in-one hacking tool launcher for security researchers" \
-            --url "https://github.com/Z4nzu/hackingtool" \
+            --url "https://github.com/one2one/one2one" \
             "$sdist"
       - uses: softprops/action-gh-release@3bb12739c298aeb8a4eeaf626c5b8d85266b0e65 # v2
         with:
           files: |
             *.deb
-            sbom/hackingtool.cdx.json
+            sbom/one2one.cdx.json

@@ -3,9 +3,9 @@ requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "hackingtool"
+name = "one2one"
 dynamic = ["version"]                       # single-sourced from constants.VERSION
-description = "All-in-one hacking tool launcher for security researchers and pentesters"
+description = "One2One — all-in-one ethical-hacking console for security researchers and pentesters"
 readme = "README.md"
 requires-python = ">=3.10"                  # floor: code uses 3.10 union syntax; no upper cap so newer Pythons work
 license = { text = "MIT" }
@@ -31,26 +31,26 @@ classifiers = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/Z4nzu/hackingtool"
-Repository = "https://github.com/Z4nzu/hackingtool"
-Issues = "https://github.com/Z4nzu/hackingtool/issues"
+Homepage = "https://github.com/one2one/one2one"
+Repository = "https://github.com/one2one/one2one"
+Issues = "https://github.com/one2one/one2one/issues"
 
 [project.scripts]
-hackingtool = "hackingtool.cli:main"
+one2one = "one2one.cli:main"
 
 # Dev tooling for local checks + CI (single source: `scripts/check.sh`).
 # `uv run --group dev <tool>` auto-installs these into the project env.
 [dependency-groups]
 dev = ["pytest>=8", "ruff>=0.6"]
 
-# src-layout: the whole app lives in src/hackingtool/ (PyPA-standard). The YAML
+# src-layout: the whole app lives in src/one2one/ (PyPA-standard). The YAML
 # catalog + pipelines ship as package data so `catalog/*.yaml` is available at
 # runtime from an installed wheel (registry.py resolves them via __file__).
 [tool.setuptools.packages.find]
 where = ["src"]
 
 [tool.setuptools.package-data]
-hackingtool = ["catalog/*.yaml", "pipelines/*.yaml", "skill/*.md"]
+one2one = ["catalog/*.yaml", "pipelines/*.yaml", "skill/*.md"]
 
 [tool.setuptools.dynamic]
-version = { attr = "hackingtool.constants.VERSION" }
+version = { attr = "one2one.constants.VERSION" }

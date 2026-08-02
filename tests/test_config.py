@@ -1,6 +1,8 @@
+import os
+
 import pytest
 
-from hackingtool import config
+from one2one import config
 
 
 @pytest.fixture
@@ -57,42 +59,43 @@ def test_ensure_user_files_scaffolds(tmp_cfg):
     assert tmp_cfg.exists()                       # config.json from defaults
     env = tmp_cfg.parent / ".env"
     assert env.exists()
-    body = env.read_text()
+    body = env.read_text(encoding="utf-8")
     # Security: the template must NEVER ship an active secret — every AI-key
     # line stays commented out.
     for line in body.splitlines():
-        if "HACKINGTOOL_AI_KEY" in line:
+        if "ONE2ONE_AI_KEY" in line:
             assert line.lstrip().startswith("#")
 
 
 def test_set_ai_key_writes_env_not_config(tmp_cfg, monkeypatch):
     import stat
-    monkeypatch.delenv("HACKINGTOOL_AI_KEY", raising=False)   # ensure clean + auto-restore
+    monkeypatch.delenv("ONE2ONE_AI_KEY", raising=False)   # ensure clean + auto-restore
     env = tmp_cfg.parent / ".env"
-    env.write_text("# hackingtool\nHACKINGTOOL_AI_MODEL=claude-x\n"
-                   "# HACKINGTOOL_AI_KEY=sk-ant-your-key-here\n")
+    env.write_text("# one2one\nONE2ONE_AI_MODEL=claude-x\n"
+                   "# ONE2ONE_AI_KEY=sk-ant-your-key-here\n")
 
     ok, _ = config.set_ai_key("sk-ant-real-123")
     assert ok
-    body = env.read_text()
-    assert "HACKINGTOOL_AI_KEY=sk-ant-real-123" in body        # written, uncommented
-    assert "HACKINGTOOL_AI_MODEL=claude-x" in body             # other lines preserved
-    assert stat.S_IMODE(env.stat().st_mode) == 0o600           # owner-only
+    body = env.read_text(encoding="utf-8")
+    assert "ONE2ONE_AI_KEY=sk-ant-real-123" in body        # written, uncommented
+    assert "ONE2ONE_AI_MODEL=claude-x" in body             # other lines preserved
+    if os.name != "nt":                                        # POSIX modes don't apply on Windows
+        assert stat.S_IMODE(env.stat().st_mode) == 0o600       # owner-only
     assert config.ai_key() == "sk-ant-real-123"                # live in-process, no restart
-    assert not tmp_cfg.exists() or "sk-ant-real-123" not in tmp_cfg.read_text()  # never in config.json
+    assert not tmp_cfg.exists() or "sk-ant-real-123" not in tmp_cfg.read_text(encoding="utf-8")  # never in config.json
 
     ok, _ = config.set_ai_key("")                              # clearing re-hides + unsets
     assert ok and config.ai_key() == ""
-    assert "sk-ant-real-123" not in env.read_text()
+    assert "sk-ant-real-123" not in env.read_text(encoding="utf-8")
 
 
 def test_ensure_user_files_never_overwrites(tmp_cfg):
     tmp_cfg.write_text('{"theme": "cyan"}')       # pre-existing, hand-edited
     env = tmp_cfg.parent / ".env"
-    env.write_text("# HACKINGTOOL_AI_KEY=sk-real-key\n")
+    env.write_text("# ONE2ONE_AI_KEY=sk-real-key\n")
     config.ensure_user_files()
     assert '"cyan"' in tmp_cfg.read_text()         # config untouched
-    assert env.read_text() == "# HACKINGTOOL_AI_KEY=sk-real-key\n"
+    assert env.read_text() == "# ONE2ONE_AI_KEY=sk-real-key\n"
 
 
 def test_allowed_values():
@@ -102,15 +105,15 @@ def test_allowed_values():
 
 
 def test_config_command_no_arg_lists(monkeypatch, capsys):
-    import hackingtool.cli as cli
+    import one2one.cli as cli
     cli.config_command("")
     out = capsys.readouterr().out
     assert "background_runner" in out and "version" in out
 
 
 def test_config_command_sets(monkeypatch):
-    import hackingtool.cli as cli
-    from hackingtool import config
+    import one2one.cli as cli
+    from one2one import config
     seen = {}
     monkeypatch.setattr(config, "set_value",
                         lambda k, v: seen.setdefault("call", (k, v)) or (True, "ok"))
@@ -119,14 +122,14 @@ def test_config_command_sets(monkeypatch):
 
 
 def test_config_command_show_single(monkeypatch, capsys):
-    import hackingtool.cli as cli
+    import one2one.cli as cli
     cli.config_command("background_runner")
     out = capsys.readouterr().out
     assert "background_runner" in out and "auto" in out
 
 
 def test_config_command_show_unique_prefix(monkeypatch, capsys):
-    import hackingtool.cli as cli
+    import one2one.cli as cli
     cli.config_command("background")
     out = capsys.readouterr().out
     assert "background_runner" in out
@@ -134,7 +137,7 @@ def test_config_command_show_unique_prefix(monkeypatch, capsys):
 
 # ── config_ui (modal editor) ───────────────────────────────────────────────────
 def test_config_ui_rows(tmp_cfg):
-    from hackingtool import config_ui
+    from one2one import config_ui
     rows = config_ui._rows()
     by_key = {r["key"]: r for r in rows}
     assert by_key["ai_provider"]["kind"] == "choice"
@@ -147,7 +150,7 @@ def test_config_ui_rows(tmp_cfg):
 
 
 def test_config_ui_cycle():
-    from hackingtool import config_ui
+    from one2one import config_ui
     c = ["auto", "ollama", "openai-compat"]
     assert config_ui._cycle_choice("auto", c) == "ollama"          # → forward
     assert config_ui._cycle_choice("openai-compat", c) == "auto"   # → wraps
@@ -157,8 +160,8 @@ def test_config_ui_cycle():
 
 
 def test_config_command_no_arg_opens_modal_on_tty(monkeypatch):
-    import hackingtool.cli as cli
-    from hackingtool import prompt, config_ui
+    import one2one.cli as cli
+    from one2one import prompt, config_ui
     opened = {}
     monkeypatch.setattr(prompt, "_use_pt", lambda: True)
     monkeypatch.setattr(config_ui, "open_editor", lambda: opened.setdefault("hit", True))
@@ -168,8 +171,8 @@ def test_config_command_no_arg_opens_modal_on_tty(monkeypatch):
 
 # ── /config github (discover token check) ──────────────────────────────────────
 def test_check_token_reports_missing(monkeypatch):
-    from hackingtool import discover
-    for name in ("HACKINGTOOL_GITHUB_TOKEN", "GITHUB_TOKEN", "GH_TOKEN"):
+    from one2one import discover
+    for name in ("ONE2ONE_GITHUB_TOKEN", "GITHUB_TOKEN", "GH_TOKEN"):
         monkeypatch.delenv(name, raising=False)
     ok, detail = discover.check_token()
     assert ok is False
@@ -177,8 +180,8 @@ def test_check_token_reports_missing(monkeypatch):
 
 
 def test_check_token_reports_limit(monkeypatch):
-    from hackingtool import discover
-    monkeypatch.setenv("HACKINGTOOL_GITHUB_TOKEN", "ghp_x")
+    from one2one import discover
+    monkeypatch.setenv("ONE2ONE_GITHUB_TOKEN", "ghp_x")
     monkeypatch.setattr(discover, "_fetch",
                         lambda url: {"resources": {"search": {"limit": 30}}})
     ok, detail = discover.check_token()
@@ -186,7 +189,7 @@ def test_check_token_reports_limit(monkeypatch):
 
 
 def test_token_steps_never_leak_a_real_token():
-    from hackingtool.discover import GITHUB_TOKEN_STEPS
+    from one2one.discover import GITHUB_TOKEN_STEPS
     assert "ghp_" not in GITHUB_TOKEN_STEPS.replace("ghp_your-token-here", "")
     assert "no permissions" in GITHUB_TOKEN_STEPS.lower()
 
@@ -194,9 +197,9 @@ def test_token_steps_never_leak_a_real_token():
 def test_check_token_never_leaks_token_on_rejection(monkeypatch):
     """Token hygiene: a failed check_token() must not echo the token value
     anywhere in its detail string, even indirectly via an exception message."""
-    from hackingtool import discover
+    from one2one import discover
     secret = "ghp_supersecrettoken12345"
-    monkeypatch.setenv("HACKINGTOOL_GITHUB_TOKEN", secret)
+    monkeypatch.setenv("ONE2ONE_GITHUB_TOKEN", secret)
 
     def _boom(url):
         raise ValueError(f"bad request to {url}")
@@ -207,8 +210,8 @@ def test_check_token_never_leaks_token_on_rejection(monkeypatch):
 
 
 def test_config_command_github_no_token(monkeypatch, capsys):
-    import hackingtool.cli as cli
-    from hackingtool import discover
+    import one2one.cli as cli
+    from one2one import discover
     monkeypatch.setattr(discover, "check_token", lambda: (False, "no token configured"))
     cli.config_command("github")
     out = capsys.readouterr().out
