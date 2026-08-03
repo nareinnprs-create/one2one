@@ -7,6 +7,8 @@ from rich import box
 
 class GoSpider(One2OneTool):
     TITLE = "Gospider"
+    MAINTENANCE = "stale"
+    MAINTENANCE_NOTE = "no push in 2y 3m"
     DESCRIPTION = "Gospider - Fast web spider written in Go"
     INSTALL_COMMANDS = ["sudo go get -u github.com/jaeles-project/gospider"]
     PROJECT_URL = "https://github.com/jaeles-project/gospider"

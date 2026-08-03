@@ -82,6 +82,8 @@ class XeroSploit(One2OneTool):
 
 class RedHawk(One2OneTool):
     TITLE = "RED HAWK (All In One Scanning)"
+    MAINTENANCE = "stale"
+    MAINTENANCE_NOTE = "no push in 2y 0m"
     DESCRIPTION = "All in one tool for Information Gathering and Vulnerability Scanning."
     INSTALL_COMMANDS = [
         "git clone https://github.com/Tuhinshubhra/RED_HAWK.git"]
@@ -91,6 +93,8 @@ class RedHawk(One2OneTool):
 
 class ReconSpider(One2OneTool):
     TITLE = "ReconSpider(For All Scanning)"
+    MAINTENANCE = "stale"
+    MAINTENANCE_NOTE = "no push in 2y 10m"
     DESCRIPTION = "ReconSpider is most Advanced Open Source Intelligence (OSINT)" \
                   " Framework for scanning IP Address, Emails, \n" \
                   "Websites, Organizations and find out information from" \
@@ -163,6 +167,8 @@ class Striker(One2OneTool):
 
 class SecretFinder(One2OneTool):
     TITLE = "SecretFinder (like API & etc)"
+    MAINTENANCE = "stale"
+    MAINTENANCE_NOTE = "no push in 2y 2m"
     DESCRIPTION = "SecretFinder - A python script for find sensitive data \n" \
                   "like apikeys, accesstoken, authorizations, jwt,..etc \n " \
                   "and search anything on javascript files.\n\n " \
@@ -193,6 +199,8 @@ class Shodan(One2OneTool):
 
 class PortScannerRanger(One2OneTool):
     TITLE = "Port Scanner - rang3r"
+    MAINTENANCE = "stale"
+    MAINTENANCE_NOTE = "no push in 2y 9m"
     DESCRIPTION = "rang3r is a python script which scans in multi thread\n " \
                   "all alive hosts within your range that you specify."
     INSTALL_COMMANDS = [
@@ -212,6 +220,8 @@ class PortScannerRanger(One2OneTool):
 
 class Breacher(One2OneTool):
     TITLE = "Breacher"
+    MAINTENANCE = "stale"
+    MAINTENANCE_NOTE = "no push in 2y 2m"
     DESCRIPTION = "An advanced multithreaded admin panel finder written in python."
     INSTALL_COMMANDS = ["git clone https://github.com/s0md3v/Breacher.git"]
     PROJECT_URL = "https://github.com/s0md3v/Breacher"

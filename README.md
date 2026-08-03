@@ -117,6 +117,33 @@ Requires **Python 3.10+** on **Linux or macOS** (Kali, Parrot, Debian/Ubuntu, Ar
 …). Windows is not supported — the app tells you so and exits. No `curl | bash`:
 every path below is a standard, verifiable install.
 
+### Single package — everything in one shot
+
+one2one ships **all 153 installable tool payloads** (catalog + legacy — every
+tool with a concrete install command) in one package. A report at
+`~/.one2one/install-report.md` lists what installed and any best-effort failures.
+
+**Docker (recommended)** — the image is pre-built with the full techstack
+(Go 1.26, Ruby 4.0, Node 24 LTS, PHP 8.5, OpenJDK 25, Python 3.14) **and every
+tool payload already installed**:
+
+```bash
+docker run -it --rm ghcr.io/nareinnprs-create/one2one:latest
+```
+
+**Native** — install the CLI and all payloads in one shot:
+
+```bash
+git clone https://github.com/nareinnprs-create/one2one.git && cd one2one
+make install-all          # or: bash scripts/install_all.sh
+```
+
+Want to see the full plan before touching anything?
+
+```bash
+one2one --install-all --dry-run
+```
+
 ### From source with pipx (recommended)
 
 [pipx](https://pipx.pypa.io) installs one2one into its own isolated environment
@@ -194,17 +221,19 @@ gate (lint + tests + catalog validation). See [CONTRIBUTING.md](CONTRIBUTING.md)
 
 ### Docker
 
-Pull and run the published image:
+Pull and run the published image. It already contains every tool payload and the
+full techstack — nothing else to install:
 
 ```bash
 docker run -it --rm ghcr.io/nareinnprs-create/one2one:latest
 ```
 
-Or build it locally from a checkout:
+Or build it locally from a checkout (the build also runs `one2one --install-all`
+so the image ships complete):
 
 ```bash
 git clone https://github.com/nareinnprs-create/one2one.git && cd one2one
-docker build -t one2one .
+make image                # or: docker build -t one2one .
 docker run -it --rm one2one
 ```
 

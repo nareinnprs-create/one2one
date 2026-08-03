@@ -12,3 +12,11 @@ test:
 setup:
 	git config core.hooksPath .githooks
 	@echo "pre-push hook enabled — 'make check' now runs automatically before push."
+
+# The single package, Docker flavour: every payload pre-installed in the image.
+image:
+	docker build -t one2one:full .
+
+# The single package, native flavour: install the CLI + all payloads in one shot.
+install-all:
+	./scripts/install_all.sh

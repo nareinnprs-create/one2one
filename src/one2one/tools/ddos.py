@@ -117,6 +117,8 @@ class GoldenEye(One2OneTool):
 
 class Saphyra(One2OneTool):
     TITLE = "SaphyraDDoS"
+    MAINTENANCE = "stale"
+    MAINTENANCE_NOTE = "no push in 2y 3m"
     SUPPORTED_OS = ["linux"]
     DESCRIPTION = "A Python DDoS script for SECURITY TESTING PURPOSES ONLY."
     INSTALL_COMMANDS = [

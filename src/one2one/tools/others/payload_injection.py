@@ -18,6 +18,8 @@ class DebInject(One2OneTool):
 
 class Pixload(One2OneTool):
     TITLE = "Pixload"
+    MAINTENANCE = "stale"
+    MAINTENANCE_NOTE = "no push in 2y 8m"
     DESCRIPTION = "Pixload -- Image Payload Creating tools \n " \
                   "Pixload is Set of tools for creating/injecting payload into images."
     INSTALL_COMMANDS = [

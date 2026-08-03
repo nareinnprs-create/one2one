@@ -34,16 +34,17 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-TOOLS_DIR = ROOT / "tools"
+TOOLS_DIR = ROOT / "src" / "one2one" / "tools"
 CACHE_FILE = ROOT / "scripts" / ".audit_cache.json"
 REPORT_MD = ROOT / "scripts" / "tool_audit_report.md"
 REPORT_JSON = ROOT / "scripts" / "tool_audit.json"
 
-CLASS_RE = re.compile(r"^class\s+(\w+)\s*\(", re.M)
+CLASS_RE = re.compile(r"^class\s+(\w+)\s*\(", re.MULTILINE)
 TITLE_RE = re.compile(r'TITLE\s*=\s*["\'](.+?)["\']')
 PROJECT_URL_RE = re.compile(r'PROJECT_URL\s*=\s*["\'](https?://[^"\']+)["\']')
 ARCHIVED_RE = re.compile(r"ARCHIVED\s*=\s*True")
 ARCHIVED_REASON_RE = re.compile(r'ARCHIVED_REASON\s*=\s*["\'](.+?)["\']')
+MAINTENANCE_RE = re.compile(r'MAINTENANCE\s*=\s*["\'](\w+)["\']')
 GH_CLONE_RE = re.compile(r"git\s+clone\s+(?:--\S+\s+)*(https?://github\.com/[^\s\"']+)")
 GH_REPO_RE = re.compile(r"github\.com/([^/\s]+)/([^/\s#?\"']+)")
 
@@ -86,6 +87,8 @@ def parse_tools() -> list[dict]:
                 "already_archived": bool(ARCHIVED_RE.search(block)),
                 "archived_reason": (ARCHIVED_REASON_RE.search(block).group(1)
                                     if ARCHIVED_REASON_RE.search(block) else ""),
+                "maintenance": (MAINTENANCE_RE.search(block).group(1)
+                                if MAINTENANCE_RE.search(block) else "active"),
             })
     return records
 
@@ -137,6 +140,10 @@ def classify(rec: dict, api: dict, stale_years: int) -> tuple[str, str]:
     """Return (verdict, reason)."""
     if rec["already_archived"]:
         return "ALREADY-ARCHIVED", rec["archived_reason"] or "flagged in code"
+    maintenance = rec.get("maintenance", "active")
+    # A hand-verified non-GitHub host: acknowledged, not an action item.
+    if maintenance == "manual" and not rec["project_repo"]:
+        return "KEEP-MANUAL", "non-GitHub host — verified by hand (2026-08)"
     if not rec["project_repo"]:
         return "MANUAL", "non-GitHub host — check by hand"
     st = api.get("status")
@@ -153,11 +160,19 @@ def classify(rec: dict, api: dict, stale_years: int) -> tuple[str, str]:
     if api.get("archived"):
         return "ARCHIVE", "upstream repo archived"
     pushed = api.get("pushed_at")
+    stale = False
     if pushed:
         age_days = (datetime.now(timezone.utc)
                     - datetime.fromisoformat(pushed.replace("Z", "+00:00"))).days
-        if age_days > stale_years * 365:
-            return "STALE", f"no push in {age_days // 365}y {(age_days % 365) // 30}m"
+        stale = age_days > stale_years * 365
+    # Acknowledged legacy: kept intentionally with a maintained alternative in
+    # the catalog — the audit should not keep flagging it as an action item.
+    if maintenance == "stale" and stale:
+        return "KEPT-LEGACY", f"acknowledged legacy — no push in {pushed[:10]}; modern alternative in catalog"
+    if stale:
+        yrs = age_days // 365
+        mons = (age_days % 365) // 30
+        return "STALE", f"no push in {yrs}y {mons}m"
     # URL points at a different repo than we clone → drift
     if rec["clone_repo"] and rec["project_repo"] and rec["clone_repo"] != rec["project_repo"]:
         return "REFRESH-URL", f"PROJECT_URL={rec['project_repo']} but clones {rec['clone_repo']}"
@@ -179,7 +194,7 @@ def main() -> int:
 
     cache: dict = {}
     if CACHE_FILE.exists() and not args.refresh:
-        cache = json.loads(CACHE_FILE.read_text())
+        cache = json.loads(CACHE_FILE.read_text(encoding="utf-8"))
         # Drop any rate-limit misses that were cached by older buggy runs.
         poisoned = [k for k, v in cache.items() if v.get("status") in (403, 429)]
         for k in poisoned:
@@ -204,7 +219,7 @@ def main() -> int:
         fetched += 1
         if not token:
             time.sleep(0.3)  # be polite when anon
-    CACHE_FILE.write_text(json.dumps(cache, indent=2, sort_keys=True))
+    CACHE_FILE.write_text(json.dumps(cache, indent=2, sort_keys=True), encoding="utf-8")
     print(f"Fetched {fetched} new; {len(cache)} cached; {len(repos) - len(cache)} still unfetched.")
 
     # Classify + assemble
@@ -215,8 +230,8 @@ def main() -> int:
         results.append({**rec, "verdict": verdict, "reason": reason,
                         "stars": api.get("stars"), "pushed_at": api.get("pushed_at")})
 
-    order = ["DEAD", "ARCHIVE", "STALE", "REFRESH-URL", "MANUAL", "PENDING",
-             "ALREADY-ARCHIVED", "KEEP"]
+    order = ["DEAD", "ARCHIVE", "STALE", "KEPT-LEGACY", "REFRESH-URL", "MANUAL",
+             "KEEP-MANUAL", "PENDING", "ALREADY-ARCHIVED", "KEEP"]
     results.sort(key=lambda r: (order.index(r["verdict"]) if r["verdict"] in order else 99,
                                 r["category"], r["title"]))
 
@@ -224,18 +239,22 @@ def main() -> int:
     for r in results:
         counts[r["verdict"]] = counts.get(r["verdict"], 0) + 1
 
-    REPORT_JSON.write_text(json.dumps(results, indent=2))
+    REPORT_JSON.write_text(json.dumps(results, indent=2), encoding="utf-8")
 
-    lines = [f"# Tool-List Curation Audit — {datetime.now().strftime('%Y-%m-%d')}", "",
-             f"Parsed **{len(records)}** tools with a PROJECT_URL across "
-             f"**{len(repos)}** unique GitHub repos.", "",
+    lines = [f"# Tool-List Curation Audit — {datetime.now(timezone.utc).strftime('%Y-%m-%d')}",
+             "",
+             (f"Parsed **{len(records)}** tools with a PROJECT_URL across "
+              f"**{len(repos)}** unique GitHub repos."),
+             "",
              "## Summary", "", "| Verdict | Count | Meaning |", "|---|---:|---|"]
     meaning = {
         "DEAD": "repo 404 → archive/remove",
         "ARCHIVE": "upstream archived → move to Archived",
         "STALE": f"no commits in {args.stale_years}y+ → archive candidate",
+        "KEPT-LEGACY": "acknowledged legacy — kept, modern alternative in catalog",
         "REFRESH-URL": "PROJECT_URL ≠ cloned repo → fix link",
         "MANUAL": "non-GitHub / API error → check by hand",
+        "KEEP-MANUAL": "non-GitHub host verified by hand → keep",
         "PENDING": "not yet fetched (needs token)",
         "ALREADY-ARCHIVED": "already flagged in code",
         "KEEP": "maintained → keep",
@@ -244,16 +263,17 @@ def main() -> int:
         if counts.get(v):
             lines.append(f"| {v} | {counts[v]} | {meaning.get(v,'')} |")
 
-    lines += ["", "## Action list (non-KEEP, non-already-archived)", "",
+    lines += ["", "## Action list (non-KEEP, non-already-archived, non-acknowledged)", "",
               "| Verdict | Tool | Category | Repo | Reason | File |",
               "|---|---|---|---|---|---|"]
+    acknowledged = ("KEEP", "ALREADY-ARCHIVED", "KEPT-LEGACY", "KEEP-MANUAL")
     for r in results:
-        if r["verdict"] in ("KEEP", "ALREADY-ARCHIVED"):
+        if r["verdict"] in acknowledged:
             continue
         lines.append(f"| {r['verdict']} | {r['title']} | {r['category']} | "
                      f"{r['project_repo'] or r['project_url']} | {r['reason']} | {r['file']} |")
     lines.append("")
-    REPORT_MD.write_text("\n".join(lines))
+    REPORT_MD.write_text("\n".join(lines), encoding="utf-8")
 
     print("\n" + " · ".join(f"{v}:{counts[v]}" for v in order if counts.get(v)))
     print(f"Report → {REPORT_MD.relative_to(ROOT)}  |  {REPORT_JSON.relative_to(ROOT)}")

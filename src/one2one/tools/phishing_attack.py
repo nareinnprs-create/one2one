@@ -73,6 +73,8 @@ class SocialFish(One2OneTool):
 
 class HiddenEye(One2OneTool):
     TITLE = "HiddenEye"
+    MAINTENANCE = "stale"
+    MAINTENANCE_NOTE = "no push in 2y 6m"
     SUPPORTED_OS = ["linux"]
     DESCRIPTION = (
         "Modern Phishing Tool With Advanced Functionality And Multiple Tunnelling Services\n"
@@ -124,6 +126,8 @@ class ISeeYou(One2OneTool):
 
 class SayCheese(One2OneTool):
     TITLE = "SayCheese"
+    MAINTENANCE = "stale"
+    MAINTENANCE_NOTE = "no push in 2y 1m"
     SUPPORTED_OS = ["linux"]
     DESCRIPTION = "Take webcam shots from target just by sending a malicious link"
     INSTALL_COMMANDS = ["git clone https://github.com/hangetzzu/saycheese"]
@@ -133,6 +137,8 @@ class SayCheese(One2OneTool):
 
 class QRJacking(One2OneTool):
     TITLE = "QR Code Jacking"
+    MAINTENANCE = "stale"
+    MAINTENANCE_NOTE = "no push in 2y 7m"
     SUPPORTED_OS = ["linux"]
     DESCRIPTION = "QR Code Jacking (Any Website)"
     INSTALL_COMMANDS = [

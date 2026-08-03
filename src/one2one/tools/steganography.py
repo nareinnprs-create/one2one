@@ -44,6 +44,8 @@ class SteganoHide(One2OneTool):
 
 class StegnoCracker(One2OneTool):
     TITLE = "Stegseek (fast steganography cracker)"
+    MAINTENANCE = "stale"
+    MAINTENANCE_NOTE = "no push in 2y 9m"
     DESCRIPTION = "Stegseek brute-forces and extracts steghide-embedded data extremely fast"
     INSTALL_COMMANDS = ["sudo apt-get install -y stegseek"]
     RUN_COMMANDS = ["stegseek --help"]

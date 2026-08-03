@@ -751,6 +751,11 @@ def _build_arg_parser() -> argparse.ArgumentParser:
                    help="probe this app's own AI layer for prompt-injection resistance (E1)")
     p.add_argument("--mythos-benchmark", action="store_true",
                    help="score the offline scanners against the benchmark corpus (H3)")
+    p.add_argument("--install-all", dest="install_all", action="store_true",
+                   help="bulk-install every tool payload + techstack deps into ~/.one2one/tools "
+                        "(single-package setup; writes ~/.one2one/install-report.md)")
+    p.add_argument("--dry-run", dest="dry_run", action="store_true",
+                   help="with --install-all: plan and report only, install nothing")
     return p
 
 
@@ -763,6 +768,17 @@ def _load_targets(spec: str) -> list[str]:
 
 def _run_headless(args) -> None:
     from one2one import mythos, mythos_benchmark
+
+    # ── standalone: bulk install (single package) ─────────────────────────
+    if args.install_all:
+        from one2one import install
+        from one2one.config import get_user_dir
+        inst_report = install.install_all(dry_run=args.dry_run)
+        md, js = install.write_report(inst_report, get_user_dir())
+        console.print(install.render_report(inst_report))
+        console.print(f"\n[green]report ->[/green] {md}")
+        console.print(f"[green]json   ->[/green] {js}")
+        return
 
     # ── standalone Mythos modes (no engagement needed) ─────────────────────
     if args.ai_self_test:
@@ -876,7 +892,7 @@ def main():
     if argv and (argv[0] in ("-h", "--help") or any(a.startswith("--") for a in argv)):
         args = _build_arg_parser().parse_args(argv)   # argparse prints help and exits on -h/--help
         standalone = args.ai_self_test or args.mythos_benchmark \
-            or args.mythos_code or args.mythos_binary
+            or args.mythos_code or args.mythos_binary or args.install_all
         if not args.engagement and not standalone:
             console.print("[bold red]--engagement is required in headless mode "
                           "(or use --ai-self-test / --mythos-benchmark / "

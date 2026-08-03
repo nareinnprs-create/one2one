@@ -77,6 +77,8 @@ class Leviathan(One2OneTool):
 
 class SQLScan(One2OneTool):
     TITLE = "SQLScan"
+    MAINTENANCE = "stale"
+    MAINTENANCE_NOTE = "no push in 2y 4m"
     DESCRIPTION = "SQLScan is a quick web scanner to find SQL injection points. Not for educational purposes."
     INSTALL_COMMANDS = ["sudo apt install php php-bz2 php-curl php-mbstring curl",
                         "sudo curl https://raw.githubusercontent.com/Cvar1984/sqlscan/dev/build/main.phar --output /usr/local/bin/sqlscan",

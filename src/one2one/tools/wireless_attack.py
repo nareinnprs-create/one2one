@@ -5,6 +5,8 @@ from one2one.core import One2OneTool, One2OneToolsCollection, console
 
 class WIFIPumpkin(One2OneTool):
     TITLE = "WiFi-Pumpkin"
+    MAINTENANCE = "stale"
+    MAINTENANCE_NOTE = "no push in 2y 6m"
     DESCRIPTION = (
         "The WiFi-Pumpkin is a rogue AP framework to easily create fake networks\n"
         "while forwarding legitimate traffic to and from the unsuspecting target."

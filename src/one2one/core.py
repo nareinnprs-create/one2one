@@ -165,6 +165,15 @@ class One2OneTool:
     ARCHIVED: bool          = False
     ARCHIVED_REASON: str    = ""
 
+    # Maintenance posture (2026-08 catalog audit):
+    #   "active"  -> maintained upstream (default)
+    #   "stale"   -> acknowledged legacy: works, no upstream commits 2y+,
+    #                kept for compatibility (a maintained alternative is in the
+    #                catalog). audit_tools.py treats stale+marked as KEPT-LEGACY.
+    #   "manual"  -> non-GitHub host; verified by hand in the audit.
+    MAINTENANCE: str        = "active"
+    MAINTENANCE_NOTE: str   = ""
+
     def __init__(self, options=None, installable=True, runnable=True):
         options = options or []
         if not isinstance(options, list):

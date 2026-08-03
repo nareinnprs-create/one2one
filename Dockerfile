@@ -12,11 +12,19 @@ LABEL org.opencontainers.image.title="one2one" \
       org.opencontainers.image.source="https://github.com/nareinnprs-create/one2one" \
       org.opencontainers.image.licenses="MIT"
 
-# Runtime system deps: python + git (tools clone their own repos) + php/curl/wget
-# (a handful of tools shell out to these). --no-install-recommends keeps it lean.
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
-        git python3 python3-pip python3-venv curl wget php && \
+# ── techstack (Aug 2026) ───────────────────────────────────────────────────────
+# One runtime per language the payloads need, pinned to the latest Kali-rolling
+# snapshot (the pinned base digest above is the reproducibility guarantee).
+# go: golang-go (1.26.x)  ·  ruby 4.0.5  ·  node 24.x LTS  ·  php 8.5.x
+# default-jre-headless: OpenJDK 25 LTS  ·  python3: 3.14.x (floor: >=3.10)
+# build-essential + curl/wget/sqlite3: the git-clone payloads compile in-image.
+RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+        git ca-certificates curl wget unzip xz-utils \
+        python3 python3-pip python3-venv \
+        golang-go ruby nodejs npm php php-curl php-mbstring php-xml \
+        default-jre-headless sqlite3 \
+        build-essential make gcc g++ libssl-dev zlib1g-dev && \
     rm -rf /var/lib/apt/lists/*
 
 WORKDIR /src
@@ -29,7 +37,16 @@ COPY src ./src
 RUN --mount=type=cache,target=/root/.cache/pip \
     pip3 install --break-system-packages .
 
-# Tools install their payloads at runtime under here; persist via a volume.
-RUN mkdir -p /root/.one2one/tools
+# ── the single package ─────────────────────────────────────────────────────────
+# Every installable payload (153 tools across catalog + legacy — all with a
+# concrete install command) is installed into /root/.one2one/tools right here,
+# so the image IS the full environment. Best-effort: a failing payload is
+# recorded in install-report.md, never fatal. `sudo` is stripped automatically
+# when running as root (one2one install engine).
+RUN mkdir -p /root/.one2one/tools && \
+    one2one --install-all; \
+    test -s /root/.one2one/install-report.md && \
+    echo "install-all report written (see /root/.one2one/install-report.md)"
+
 WORKDIR /root
 ENTRYPOINT ["one2one"]

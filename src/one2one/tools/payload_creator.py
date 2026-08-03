@@ -6,6 +6,8 @@ from one2one.core import One2OneTool, One2OneToolsCollection, console
 
 class TheFatRat(One2OneTool):
     TITLE = "The FatRat"
+    MAINTENANCE = "stale"
+    MAINTENANCE_NOTE = "no push in 2y 4m"
     SUPPORTED_OS = ["linux"]
     DESCRIPTION = (
         "TheFatRat provides an easy way to create backdoors and payloads "
@@ -67,6 +69,8 @@ class Brutal(One2OneTool):
 
 class Stitch(One2OneTool):
     TITLE = "Stitch"
+    MAINTENANCE = "stale"
+    MAINTENANCE_NOTE = "non-GitHub host — check by hand"
     SUPPORTED_OS = ["linux"]
     DESCRIPTION = (
         "Stitch is a Cross Platform Python Remote Administrator Tool.\n"
@@ -77,7 +81,7 @@ class Stitch(One2OneTool):
         "cd Stitch && pip install --user -r lnx_requirements.txt",
     ]
     RUN_COMMANDS = ["cd Stitch && sudo python3 main.py"]
-    PROJECT_URL = "https://nathanlopez.github.io/Stitch"
+    PROJECT_URL = "https://github.com/nathanlopez/Stitch"
 
 
 class MSFVenom(One2OneTool):
@@ -99,6 +103,8 @@ class MSFVenom(One2OneTool):
 
 class Venom(One2OneTool):
     TITLE = "Venom Shellcode Generator"
+    MAINTENANCE = "stale"
+    MAINTENANCE_NOTE = "no push in 2y 7m"
     SUPPORTED_OS = ["linux"]
     DESCRIPTION = "Venom exploits apache2 webserver to deliver LAN payloads via fake webpages."
     INSTALL_COMMANDS = [

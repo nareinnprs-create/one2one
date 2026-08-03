@@ -19,6 +19,8 @@ from rich.prompt import Prompt
 
 class HatCloud(One2OneTool):
     TITLE = "HatCloud(Bypass CloudFlare for IP)"
+    MAINTENANCE = "stale"
+    MAINTENANCE_NOTE = "no push in 2y 11m"
     DESCRIPTION = "HatCloud build in Ruby. It makes bypass in CloudFlare for " \
                   "discover real IP."
     INSTALL_COMMANDS = ["git clone https://github.com/HatBashBR/HatCloud.git"]

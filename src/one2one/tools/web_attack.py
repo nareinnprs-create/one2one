@@ -35,6 +35,8 @@ class Skipfish(One2OneTool):
 
 class SubDomainFinder(One2OneTool):
     TITLE = "SubDomain Finder"
+    MAINTENANCE = "stale"
+    MAINTENANCE_NOTE = "no push in 2y 0m"
     DESCRIPTION = (
         "Sublist3r is a python tool designed to enumerate "
         "subdomains of websites using OSINT \n "
@@ -96,6 +98,8 @@ class SubDomainTakeOver(One2OneTool):
 
 class Dirb(One2OneTool):
     TITLE = "Dirb"
+    MAINTENANCE = "manual"
+    MAINTENANCE_NOTE = "non-GitHub host — check by hand"
     DESCRIPTION = (
         "DIRB is a Web Content Scanner. It looks for existing "
         "(and/or hidden) Web Objects.\n"
@@ -104,8 +108,9 @@ class Dirb(One2OneTool):
     )
     INSTALL_COMMANDS = [
         "git clone https://gitlab.com/kalilinux/packages/dirb.git",
-        "cd dirb;sudo bash configure;make"
+        "cd dirb && bash configure && make"
     ]
+    SYSTEM_PKGS = {"which": "dirb", "apt": "dirb"}
     PROJECT_URL = "https://gitlab.com/kalilinux/packages/dirb"
 
     def run(self):

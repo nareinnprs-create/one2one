@@ -19,6 +19,8 @@ class AndroGuard(One2OneTool):
 
 class Apk2Gold(One2OneTool):
     TITLE = "Apk2Gold"
+    MAINTENANCE = "stale"
+    MAINTENANCE_NOTE = "no push in 2y 5m"
     SUPPORTED_OS = ["linux"]
     DESCRIPTION = "Apk2Gold is a CLI tool for decompiling Android apps to Java"
     INSTALL_COMMANDS = [

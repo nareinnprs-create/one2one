@@ -111,6 +111,13 @@ def get_tools_dir() -> Path:
     return tools_dir
 
 
+def get_user_dir() -> Path:
+    """Return ~/.one2one (config + reports), creating it if missing."""
+    d = USER_CONFIG_FILE.parent
+    d.mkdir(parents=True, exist_ok=True)
+    return d
+
+
 def get_sudo_cmd() -> str:
     """Return 'doas' if available, else 'sudo'. Never hardcode 'sudo'."""
     import shutil

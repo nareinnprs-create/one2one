@@ -67,16 +67,21 @@ class BulkExtractor(One2OneTool):
 
 class Guymager(One2OneTool):
     TITLE = "Disk Clone and ISO Image Acquire"
+    MAINTENANCE = "manual"
+    MAINTENANCE_NOTE = "non-GitHub host — check by hand"
     DESCRIPTION = "Guymager is a free forensic imager for media acquisition."
     SUPPORTED_OS = ["linux"]
     INSTALL_COMMANDS = ["sudo apt install guymager"]
     RUN_COMMANDS = ["sudo guymager"]
+    SYSTEM_PKGS = {"which": "guymager", "apt": "guymager"}
     PROJECT_URL = "https://guymager.sourceforge.io/"
 
 
 
 class Toolsley(One2OneTool):
     TITLE = "Toolsley"
+    MAINTENANCE = "manual"
+    MAINTENANCE_NOTE = "non-GitHub host — check by hand"
     DESCRIPTION = "Toolsley got more than ten useful tools for investigation.\n" \
                   "[+]File signature verifier\n" \
                   "[+]File identifier \n" \
