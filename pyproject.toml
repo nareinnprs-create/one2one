@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=61.0"]
+requires = ["setuptools>=83.0.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -11,7 +11,7 @@ requires-python = ">=3.10"                  # floor: code uses 3.10 union syntax
 license = { text = "MIT" }
 authors = [{ name = "nareinnprs-create" }]
 keywords = ["security", "pentesting", "hacking", "ethical-hacking", "recon", "osint", "cli", "all-in-one", "penetration-testing", "red-team", "forensics", "bug-bounty"]
-dependencies = ["rich>=13.0.0", "pyyaml>=6.0", "platformdirs>=4.0", "prompt_toolkit>=3.0.0", "python-dotenv>=1.0.0"]
+dependencies = ["rich>=15.0.0", "pyyaml>=6.0.3", "platformdirs>=4.11.0", "prompt_toolkit>=3.0.53", "python-dotenv>=1.2.2"]
 
 classifiers = [
     "Development Status :: 4 - Beta",
@@ -42,7 +42,7 @@ one2one = "one2one.cli:main"
 # Dev tooling for local checks + CI (single source: `scripts/check.sh`).
 # `uv run --group dev <tool>` auto-installs these into the project env.
 [dependency-groups]
-dev = ["pytest>=8", "ruff>=0.6"]
+dev = ["pytest>=9.1.1", "ruff>=0.16.1"]
 
 # src-layout: the whole app lives in src/one2one/ (PyPA-standard). The YAML
 # catalog + pipelines ship as package data so `catalog/*.yaml` is available at
