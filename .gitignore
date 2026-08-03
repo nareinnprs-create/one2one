@@ -195,7 +195,7 @@ scripts/.discover_cache.json
 scripts/discovered_tools.md
 scripts/discovered_candidates.yaml
 
-# hackingtool's own source scripts — override the generic [Ss]cripts venv rule above
+# one2one's own source scripts — override the generic [Ss]cripts venv rule above
 !scripts/
 !scripts/audit_tools.py
 !scripts/apply_archive.py
@@ -204,7 +204,7 @@ scripts/discovered_candidates.yaml
 # Local working handoff doc (internal strategy — not for public repo)
 HANDOFF.md
 
-# AI-assistant meta/config — never commit. Only hackingtool product files get pushed.
+# AI-assistant meta/config — never commit. Only one2one product files get pushed.
 CLAUDE.md
 AGENTS.md
 AGENT.md

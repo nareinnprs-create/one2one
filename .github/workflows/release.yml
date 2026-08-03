@@ -151,9 +151,9 @@ jobs:
             --python-pip "$(command -v pip3)" \
             --python-package-name-prefix python3 \
             --depends python3 \
-            --maintainer "Z4nzu" \
+            --maintainer "nareinnprs-create <nareinnprs-create@users.noreply.github.com>" \
             --license MIT \
-            --description "All-in-one hacking tool launcher for security researchers" \
+            --description "One2One — all-in-one ethical-hacking console for security researchers and pentesters" \
             --url "https://github.com/nareinnprs-create/one2one" \
             "$sdist"
       - uses: softprops/action-gh-release@3bb12739c298aeb8a4eeaf626c5b8d85266b0e65 # v2

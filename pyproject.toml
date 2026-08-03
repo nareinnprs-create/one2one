@@ -5,12 +5,12 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "one2one"
 dynamic = ["version"]                       # single-sourced from constants.VERSION
-description = "One2One — all-in-one ethical-hacking console for security researchers and pentesters"
+description = "One2One — All-in-One ethical-hacking console for security researchers and pentesters"
 readme = "README.md"
 requires-python = ">=3.10"                  # floor: code uses 3.10 union syntax; no upper cap so newer Pythons work
 license = { text = "MIT" }
-authors = [{ name = "Z4nzu" }]
-keywords = ["security", "pentesting", "hacking", "recon", "osint", "cli"]
+authors = [{ name = "nareinnprs-create" }]
+keywords = ["security", "pentesting", "hacking", "ethical-hacking", "recon", "osint", "cli", "all-in-one", "penetration-testing", "red-team", "forensics", "bug-bounty"]
 dependencies = ["rich>=13.0.0", "pyyaml>=6.0", "platformdirs>=4.0", "prompt_toolkit>=3.0.0", "python-dotenv>=1.0.0"]
 
 classifiers = [
@@ -32,7 +32,9 @@ classifiers = [
 [project.urls]
 Homepage = "https://github.com/nareinnprs-create/one2one"
 Repository = "https://github.com/nareinnprs-create/one2one"
+Documentation = "https://github.com/nareinnprs-create/one2one/tree/master/docs"
 Issues = "https://github.com/nareinnprs-create/one2one/issues"
+Changelog = "https://github.com/nareinnprs-create/one2one/blob/master/CHANGELOG.md"
 
 [project.scripts]
 one2one = "one2one.cli:main"
