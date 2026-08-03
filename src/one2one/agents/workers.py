@@ -13,7 +13,6 @@ P2 shipped the 10 Intel-wing modules (VANGUARD); P3 ships the 16 Offense
 """
 from __future__ import annotations
 
-import os
 import re
 import shlex
 import subprocess
@@ -29,13 +28,15 @@ _KIND_PREFIXES = ("code:", "binary:")
 
 
 def _split(cmd: str) -> list:
-    """Split a command line for list-form subprocess, Windows-safe.
+    """Split a command line for list-form subprocess, path-safe.
 
-    ``shlex.split`` defaults to POSIX quoting rules, which swallow backslashes
-    in Windows paths (``C:\\lab\\file`` becomes ``Clabfile``). On ``nt`` we keep
-    the literal args so local ``code:``/``binary:`` targets survive untouched.
+    The argv is handed to subprocess as a list, never through a shell, so POSIX
+    escape semantics do not apply. ``shlex.split``'s default POSIX rules would
+    swallow backslashes in Windows paths (``C:\\lab\\file`` becomes ``Clabfile``);
+    we always keep them literal so ``code:``/``binary:`` targets survive
+    untouched on any host.
     """
-    return shlex.split(cmd, posix=(os.name != "nt"))
+    return shlex.split(cmd, posix=False)
 
 
 def _strip_kind(target: str) -> str:
