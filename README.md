@@ -208,9 +208,6 @@ docker build -t one2one .
 docker run -it --rm one2one
 ```
 
-<!-- Hidden until these distribution channels are live. Restore when the package
-     is published to PyPI and the .deb is attached to a release.
-
 ### pipx / pip from PyPI
 
 ```bash
@@ -229,10 +226,9 @@ one2one
 Grab the `.deb` from the [latest release](https://github.com/nareinnprs-create/one2one/releases/latest):
 
 ```bash
-sudo apt install ./one2one_*.deb
+sudo apt install ./python3-one2one_*.deb
 one2one
 ```
--->
 
 ### Optional runtimes
 
