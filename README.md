@@ -8,6 +8,12 @@
 forensics, post-exploitation and more — with an **AI layer that turns plain English
 into the right tool and the exact command**.
 
+**One package, everything installed.** 153 tools ship one-command installs
+(`one2one --install-all` or the pre-built Docker image) on a pinned Aug-2026
+techstack — Go 1.26, Ruby 4.0, Node 24 LTS, PHP 8.5, OpenJDK 25, Python 3.14.
+The full 2026-08 release manifest — **306 tools catalogued (262 unique)**, 59
+archived and hidden — is in [docs/RELEASE-2026-08.md](docs/RELEASE-2026-08.md).
+
 **Built for** penetration testers · red teamers · blue-team/SOC and DFIR analysts ·
 OSINT researchers · bug-bounty hunters · CTF players · security researchers and
 students — all working **legally, on systems they own or are authorised to test**.
@@ -16,7 +22,7 @@ students — all working **legally, on systems they own or are authorised to tes
 
 <br/><br/>
 
-[![License](https://img.shields.io/github/license/nareinnprs-create/one2one?style=flat-square&labelColor=0D1117&color=7B61FF)](LICENSE) [![Python](https://img.shields.io/badge/Python-3.10+-0D1117?style=flat-square&labelColor=0D1117&logo=python&logoColor=7B61FF)](https://www.python.org/) [![Stars](https://img.shields.io/github/stars/nareinnprs-create/one2one?style=flat-square&labelColor=0D1117&color=7B61FF)](https://github.com/nareinnprs-create/one2one/stargazers) [![Forks](https://img.shields.io/github/forks/nareinnprs-create/one2one?style=flat-square&labelColor=0D1117&color=7B61FF)](https://github.com/nareinnprs-create/one2one/network/members) [![Issues](https://img.shields.io/github/issues/nareinnprs-create/one2one?style=flat-square&labelColor=0D1117&color=7B61FF)](https://github.com/nareinnprs-create/one2one/issues) [![Last Commit](https://img.shields.io/github/last-commit/nareinnprs-create/one2one?style=flat-square&labelColor=0D1117&color=7B61FF)](https://github.com/nareinnprs-create/one2one/commits/master) [![Sponsor](https://img.shields.io/badge/Sponsor-%E2%9D%A4-DB61A2?style=flat-square&labelColor=0D1117&logo=githubsponsors&logoColor=DB61A2)](#support--sponsor)
+[![License](https://img.shields.io/github/license/nareinnprs-create/one2one?style=flat-square&labelColor=0D1117&color=7B61FF)](LICENSE) [![Python](https://img.shields.io/badge/Python-3.10+-0D1117?style=flat-square&labelColor=0D1117&logo=python&logoColor=7B61FF)](https://www.python.org/) [![PyPI](https://img.shields.io/pypi/v/one2one?style=flat-square&labelColor=0D1117&logo=pypi&logoColor=7B61FF)](https://pypi.org/project/one2one/) [![CI](https://img.shields.io/github/actions/workflow/status/nareinnprs-create/one2one/checks.yml?style=flat-square&labelColor=0D1117&logo=githubactions&logoColor=7B61FF)](https://github.com/nareinnprs-create/one2one/actions/workflows/checks.yml) [![Stars](https://img.shields.io/github/stars/nareinnprs-create/one2one?style=flat-square&labelColor=0D1117&color=7B61FF)](https://github.com/nareinnprs-create/one2one/stargazers) [![Forks](https://img.shields.io/github/forks/nareinnprs-create/one2one?style=flat-square&labelColor=0D1117&color=7B61FF)](https://github.com/nareinnprs-create/one2one/network/members) [![Issues](https://img.shields.io/github/issues/nareinnprs-create/one2one?style=flat-square&labelColor=0D1117&color=7B61FF)](https://github.com/nareinnprs-create/one2one/issues) [![Last Commit](https://img.shields.io/github/last-commit/nareinnprs-create/one2one?style=flat-square&labelColor=0D1117&color=7B61FF)](https://github.com/nareinnprs-create/one2one/commits/master) [![Sponsor](https://img.shields.io/badge/Sponsor-%E2%9D%A4-DB61A2?style=flat-square&labelColor=0D1117&logo=githubsponsors&logoColor=DB61A2)](#support--sponsor)
 
 <br/>
 
@@ -84,8 +90,10 @@ students — all working **legally, on systems they own or are authorised to tes
 
 ## Tool Categories
 
-**215 tools across 21 categories** — the full list, with links and tags, is in
-**[docs/TOOLS.md](docs/TOOLS.md)**.
+**215 active tools across 21 curated categories** — the full list, with links and
+tags, is in **[docs/TOOLS.md](docs/TOOLS.md)**. The complete 2026-08 release
+manifest (**306 tools catalogued · 262 unique · 59 archived hidden · 153 with
+one-command installs**) is in **[docs/RELEASE-2026-08.md](docs/RELEASE-2026-08.md)**.
 
 <div align="center">
 
@@ -261,12 +269,17 @@ one2one
 
 ### Optional runtimes
 
-Some individual tools need a language runtime to install/run; the core app doesn't.
+The **single-package** installs (`make image` / `make install-all` /
+`one2one --install-all`) pull the full pinned Aug-2026 techstack automatically.
+If you only installed the pip package, some individual tools need a runtime —
+the core app doesn't.
 
 | Dependency | Version | Needed for |
 |---|---|---|
-| Go | 1.21+ | nuclei, ffuf, amass, httpx, katana, dalfox, gobuster, subfinder |
-| Ruby | any | haiti, evil-winrm |
+| Go | 1.26 (Aug 2026) | nuclei, ffuf, amass, httpx, katana, dalfox, gobuster, subfinder |
+| Ruby | 4.0.5 | haiti, evil-winrm |
+| PHP | 8.5 | wordpress / php payloads |
+| OpenJDK | 25 LTS | burp-less Java tooling, JadX |
 | tmux | any | background panes (`/run … &`, `/panes`, `/attach`) |
 | Docker | any | Mythic, MobSF (optional) |
 
@@ -493,9 +506,34 @@ only ever summarize findings that exist.
 |---|---|
 | [How to use one2one](docs/HOW-TO-USE.md) | numbered walkthroughs: first run, `/find`, `/goal`, `/config`, background panes, headless mode |
 | [Tool catalog](docs/TOOLS.md) | every tool, by category, with links and tags |
+| [2026-08 release manifest](docs/RELEASE-2026-08.md) | the full 306-tool manifest with per-tool install method and audit verdicts |
+| [Agent stack](docs/AGENT_STACK.md) | the Mythos agent architecture, output contracts and sandboxing |
 | [Operator playbook](src/one2one/skill/OPERATOR.md) | the charter and grounding rules the AI layer runs under (also `/skill`) |
+| [CHANGELOG](CHANGELOG.md) | version-by-version history |
 | [SECURITY.md](SECURITY.md) | disclosure policy, release verification, threat model |
 | [CONTRIBUTING.md](CONTRIBUTING.md) | catalog-first tool additions, the gate your PR must pass |
+
+---
+
+## Project structure
+
+```
+one2one/
+├── src/one2one/            # the application (src-layout, installable package)
+│   ├── catalog/*.yaml      # curated tools: one YAML entry per tool (no Python)
+│   ├── pipelines/*.yaml    # headless engagement pipelines
+│   ├── tools/              # legacy collections with custom install/run logic
+│   ├── install.py          # the single-package engine (one2one --install-all)
+│   ├── orchestrator.py     # headless engagements → findings.json
+│   ├── mythos*.py          # six-agent red-team pipeline (RECON→…→AI-SECURITY)
+│   └── cli.py              # REPL, /commands, headless modes
+├── scripts/                # install_all.sh, audit_tools.py, check.sh, release tooling
+├── docs/                   # HOW-TO-USE, TOOLS, AGENT_STACK, release manifest
+├── tests/                  # pytest suite (run with `make check`)
+├── Dockerfile              # builds the complete image (all payloads pre-installed)
+├── Makefile                # make check · test · setup · image · install-all
+└── pyproject.toml          # package metadata + entry point `one2one`
+```
 
 ---
 
@@ -543,13 +581,13 @@ one2one is free and open-source. If it saves you time on an engagement or helps
 you learn, please consider sponsoring — funding goes to tool curation, the AI layer,
 and keeping installs safe and current.
 
-<a href="https://github.com/sponsors/Z4nzu"><img src="https://img.shields.io/badge/GitHub_Sponsors-EA4AAA?style=for-the-badge&logo=githubsponsors&logoColor=white" alt="Sponsor on GitHub"></a>&nbsp; <a href="https://buymeacoffee.com/hardikzinzu" target="_blank"><img src="https://img.shields.io/badge/Buy_Me_A_Coffee-1F2328?style=for-the-badge&logo=buymeacoffee&logoColor=FFDD00" alt="Buy Me A Coffee"></a>
+<a href="https://github.com/sponsors/nareinnprs-create"><img src="https://img.shields.io/badge/GitHub_Sponsors-EA4AAA?style=for-the-badge&logo=githubsponsors&logoColor=white" alt="Sponsor on GitHub"></a>
 
 ⭐ Starring the repo is free and helps others discover the project.
 
 ## Social
 
-[![Twitter](https://img.shields.io/badge/Twitter-Follow-1DA1F2?style=for-the-badge&logo=twitter&logoColor=white)](https://twitter.com/_Zinzu07) [![GitHub](https://img.shields.io/badge/GitHub-Follow-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Z4nzu/)
+[![GitHub](https://img.shields.io/badge/GitHub-Follow-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/nareinnprs-create) [![PyPI](https://img.shields.io/badge/PyPI-Package-3775A9?style=for-the-badge&logo=pypi&logoColor=white)](https://pypi.org/project/one2one/) [![Docker](https://img.shields.io/badge/GHCR-Image-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://github.com/nareinnprs-create/one2one/pkgs/container/one2one)
 
 > **For authorized security testing only.**
 > Thanks to all original authors of the tools included in one2one.
