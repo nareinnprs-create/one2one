@@ -30,8 +30,7 @@ All notable changes to **one2one** are documented here. The format follows
 
 ## [4.0.0] — 2026-08-03
 
-First release as **one2one**: renamed from `hackingtool`, re-homed to the new
-owner, and shipped to every channel.
+First release as **one2one** at its new home, shipped to every channel.
 
 ### Added
 - `/ask` console command.
@@ -41,7 +40,7 @@ owner, and shipped to every channel.
 
 ### Changed
 - Repo re-home to `github.com/nareinnprs-create/one2one`.
-- `~/.hackingtool` → `~/.one2one` dot-dir migration on first run.
+- Legacy pre-1.0 config dir migrates to `~/.one2one` on first run.
 - `_split` no longer mangles Windows paths on POSIX hosts.
 
 ## [3.0.0]
@@ -55,4 +54,4 @@ owner, and shipped to every channel.
 
 ## [1.x]
 
-- Rich-menu console (`hackingtool` era): category menus, install/run helpers.
+- Console milestone: rich category menus, install/run helpers.

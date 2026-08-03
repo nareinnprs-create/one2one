@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 # Kali base: many bundled tools already present, and it's the platform this
 # audience runs. The image installs one2one as a proper package (console
-# entry point `one2one`), not the old `python3 one2one.py` flat script.
+# entry point `one2one`).
 # Pin the base to the multi-arch manifest digest (rolling = daily updates; the
 # digest pins this exact build for reproducible/attestable images). Re-pin with:
 #   docker buildx imagetools inspect kalilinux/kali-rolling:latest

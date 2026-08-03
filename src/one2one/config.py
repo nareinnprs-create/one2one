@@ -67,8 +67,8 @@ _ENV_TEMPLATE = """\
 
 
 def migrate_legacy_config_dir() -> None:
-    """Migrate the pre-rebrand dot-dir ~/.hackingtool → ~/.one2one on the first
-    run after an upgrade, carrying over config.json / .env / tools / history.
+    """Migrate the legacy pre-1.0 dot-dir to ~/.one2one on the first run after
+    an upgrade, carrying over config.json / .env / tools / history.
     No-op when the legacy dir is absent or the new dir already exists — never
     clobbers anything."""
     legacy = Path.home() / ".hackingtool"
@@ -77,9 +77,9 @@ def migrate_legacy_config_dir() -> None:
         return
     try:
         legacy.rename(target)
-        logger.info("Migrated ~/.hackingtool → %s", target)
+        logger.info("Migrated legacy config dir → %s", target)
     except OSError as exc:
-        logger.warning("Could not migrate ~/.hackingtool (%s).", exc)
+        logger.warning("Could not migrate legacy config dir (%s).", exc)
 
 
 def ensure_user_files() -> None:

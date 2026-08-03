@@ -53,8 +53,8 @@ Vulnerabilities in **one2one's own code**, for example:
 
 - **The third-party tools themselves.** A bug in nmap, sqlmap, hashcat, etc. belongs
   to that project — report it upstream. one2one only launches them.
-- **"This software can be used to attack things."** That is the nature of an
-  ethical-hacking toolkit. Misuse by an operator against systems they are not
+- **"This software can be used to attack things."** That is the nature of a
+  security-testing toolkit. Misuse by an operator against systems they are not
   authorized to test is not a vulnerability in one2one. See
   [Authorized use](#authorized-use).
 - Findings that require an already-compromised host or physical access.
