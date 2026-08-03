@@ -37,9 +37,10 @@
 ## Checklist
 
 - [ ] Title follows the format above
-- [ ] New tool class added to the correct `tools/*.py` file
+- [ ] Preferred: catalog YAML entry added under `src/one2one/catalog/` (tags in `TAXONOMY`)
+- [ ] OR: new tool class added to the correct `tools/*.py` file
 - [ ] `TITLE`, `DESCRIPTION`, `INSTALL_COMMANDS`, `RUN_COMMANDS`, `PROJECT_URL` all set
 - [ ] `SUPPORTED_OS` set correctly (`["linux"]` / `["linux", "macos"]`)
 - [ ] Tool added to the `TOOLS` list in the collection class at the bottom of the file
-- [ ] No new dependencies added to `requirements.txt` without discussion
+- [ ] No new dependencies added to `pyproject.toml` without discussion
 - [ ] Tested locally — install and run commands work
