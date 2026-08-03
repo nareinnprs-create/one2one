@@ -62,7 +62,7 @@ def _box_bottom(w: int) -> str: return "╰" + "─" * (w - 2) + "╯"
 def _catalog():
     """(tools_by_title, tag_index), built once from cli. Cached — the catalog is
     static for a session."""
-    import one2one.cli as cli
+    from one2one import cli
 
     tag_index = cli._get_all_tags()
     tools_by_title = {t.TITLE: t for t, _ in cli._collect_all_tools() if t.TITLE}
@@ -113,7 +113,7 @@ def _running_count():
 def dispatch(raw, ctx):
     """The ONE grammar. Returns CONTINUE | QUIT | BACK | Open. Never handles
     numbers — the menu owns its own numeric options (see core.show_options)."""
-    import one2one.cli as cli
+    from one2one import cli
 
     raw = raw.strip()
     if not raw:
@@ -154,6 +154,14 @@ def dispatch(raw, ctx):
                 cli.console.print(f"[dim]killed {arg}[/dim]")
         elif cmd == "config":
             cli.config_command(arg)
+        elif cmd in ("feed", "sync", "skill-feed"):
+            _feed_cmd(arg)
+        elif cmd == "memory":
+            _memory_cmd(arg)
+        elif cmd in ("workflow", "wf"):
+            _workflow_cmd(arg)
+        elif cmd in ("engagement", "eng"):
+            _engagement_cmd(arg)
         elif cmd in ("ai", "recommend", "r"):
             cli.recommend_tools(arg or None)
         elif cmd == "skill":
@@ -205,7 +213,7 @@ def _clear(ctx):
     from one2one.core import clear_screen
     clear_screen()
     if ctx.mode == "home":
-        import one2one.cli as cli
+        from one2one import cli
         cli.console.print(cli._build_header())
 
 
@@ -214,9 +222,8 @@ def _show_agents(show_picture: bool = False) -> None:
     from rich.panel import Panel
     from rich.table import Table
 
-    from one2one import agents
+    from one2one import agents, cli
     from one2one.agents.ledger import LEDGER_FILE, MissionLedger
-    import one2one.cli as cli
 
     cli.console.print()
     if show_picture:
@@ -251,13 +258,273 @@ def _show_agents(show_picture: bool = False) -> None:
     cli.console.print(table)
 
 
+def _engagement_cmd(arg: str) -> None:
+    """/engagement — manage per-engagement scope/ROE files and the active scope.
+
+    Grammar:
+        /engagement                  list every engagement + the active one
+        /engagement create <name>    make a new (active) engagement
+        /engagement targets <name> <h1,h2>   set targets + scope-in
+        /engagement roe <name> k=v[,k=v]     set rules-of-engagement keys
+        /engagement use <name>       make it active (drives the mission gate)
+        /engagement close <name>     mark complete (inactive)
+    """
+    from rich.panel import Panel
+    from rich.table import Table
+
+    from one2one import cli, engagement
+
+    arg = (arg or "").strip()
+    if not arg:
+        rows = []
+        for e in engagement.list_all():
+            rows.append((e.name, "active" if e.active else "-",
+                         ", ".join(e.scope_in) or "-",
+                         ", ".join(e.scope_out) or "-"))
+        table = Table(title="[bold]ENGAGEMENTS[/bold]", box=None)
+        table.add_column("name", style="bold cyan")
+        table.add_column("status", style="yellow")
+        table.add_column("scope-in", style="green")
+        table.add_column("scope-out", style="dim")
+        for row in rows:
+            table.add_row(*row)
+        cli.console.print(table)
+        if not rows:
+            cli.console.print(
+                "[dim]No engagements yet — /engagement create <name>[/dim]")
+        return
+
+    parts = arg.split(None, 1)
+    verb = parts[0].lower()
+    rest = parts[1].strip() if len(parts) > 1 else ""
+
+    if verb == "create":
+        if not rest:
+            cli.console.print("[dim]Usage: /engagement create <name>[/dim]")
+            return
+        e = engagement.get_or_create(rest)
+        engagement.activate(rest)
+        cli.console.print(
+            f"[green]✓ engagement '{rest}' created + active[/green] "
+            f"[dim]· scope-in now gates /ask and /mythos missions[/dim]")
+
+    elif verb == "use":
+        e = engagement.activate(rest)
+        if e is None:
+            cli.console.print(f"[dim]No such engagement: '{rest}'[/dim]")
+            return
+        cli.console.print(f"[green]✓ '{rest}' is now active[/green]")
+
+    elif verb in ("close", "deactivate"):
+        e = engagement.close(rest)
+        cli.console.print(f"[yellow]✓ '{rest}' closed[/yellow]" if e
+                          else f"[dim]No such engagement: '{rest}'[/dim]")
+
+    elif verb == "targets":
+        name, _, spec = rest.partition(" ")
+        e = engagement.get_or_create(name)
+        targets = [t.strip() for t in spec.split(",") if t.strip()]
+        if not targets:
+            cli.console.print("[dim]Usage: /engagement targets <name> "
+                              "<h1,h2,...>[/dim]")
+            return
+        e.targets = targets
+        if not e.scope_in:
+            e.scope_in = list(targets)
+        e.save()
+        cli.console.print(f"[green]✓ '{name}' targets + scope-in = "
+                          f"{', '.join(targets)}[/green]")
+
+    elif verb == "roe":
+        name, _, kv = rest.partition(" ")
+        e = engagement.get_or_create(name)
+        if not kv:
+            cli.console.print(
+                "[dim]Usage: /engagement roe <name> k=v[,k=v] — e.g. "
+                "local=true,authorized_actions=passive+active[/dim]")
+            return
+        for pair in kv.split(","):
+            k, _, v = pair.partition("=")
+            k, v = k.strip(), v.strip()
+            if not k:
+                continue
+            if v in ("true", "false"):
+                e.roe[k] = v == "true"
+            else:
+                e.roe[k] = v
+        e.save()
+        cli.console.print(Panel(
+            ", ".join(f"{k}={v}" for k, v in e.roe.items()) or "(empty)",
+            title=f"[bold magenta]{name} — rules of engagement[/bold magenta]",
+            border_style="magenta"))
+
+    else:
+        cli.console.print(f"[dim]Unknown /engagement {verb}. "
+                          f"Try: create | use | close | targets | roe[/dim]")
+
+
+def _feed_cmd(arg: str) -> None:
+    """/feed — pull the skill feed through the evolution gate.
+
+    The seed bank plus any ``~/.one2one/feeds/*.yaml`` user feeds are proposed
+    as SkillPatch candidates; the tiered gate decides what the stack learns.
+    """
+    from rich.panel import Panel
+    from rich.table import Table
+
+    from one2one import cli, skill_feed
+
+    report = skill_feed.run()
+    table = Table(title="Skill feed sync", show_header=True,
+                  header_style="bold magenta")
+    table.add_column("metric", style="cyan")
+    table.add_column("count", style="bold white")
+    for metric in ("proposed", "applied", "rejected", "already"):
+        table.add_row(metric, str(report[metric]))
+    cli.console.print(table)
+    if report["notes"]:
+        cli.console.print(Panel("\n".join(f"· {n}" for n in report["notes"]),
+                                title="[bold magenta]gate notes[/bold magenta]",
+                                border_style="magenta"))
+    else:
+        cli.console.print("[dim]no new candidates — stack is up to date[/dim]")
+
+
+def _memory_cmd(arg: str) -> None:
+    """/memory — the stack's deeper memory (durable facts distilled from lessons).
+
+    ``/memory``                show stats + the most recent facts
+    ``/memory <target>``       everything we remember about one target/agent
+    """
+    from rich.panel import Panel
+    from rich.table import Table
+
+    from one2one import cli
+    from one2one.agents.memory import MEMORY_FILE, AgentMemory
+
+    memory = AgentMemory(MEMORY_FILE)
+    entity = (arg or "").strip()
+    if entity:
+        facts = memory.recall_for(entity)
+        cli.console.print(Panel(
+            "\n".join(f"· [{_conf_style(f)}]{f.kind}[/] {f.value} "
+                      f"(x{f.hits})" for f in facts)
+            or "[dim]nothing remembered yet[/dim]",
+            title=f"[bold magenta]{entity} — memory[/bold magenta]",
+            border_style="magenta"))
+        return
+
+    stats = memory.stats()
+    table = Table(title="Agent stack — deeper memory", show_header=True,
+                  header_style="bold magenta")
+    table.add_column("kind", style="cyan")
+    table.add_column("facts", style="bold white")
+    table.add_row("total", str(stats["total"]))
+    for kind, count in sorted(stats["kinds"].items()):
+        table.add_row(kind, str(count))
+    cli.console.print(table)
+    if not memory.facts:
+        cli.console.print("[dim]memory is empty — run missions to deepen it[/dim]")
+        return
+    cli.console.print(Panel(
+        "\n".join(f"· [{_conf_style(f)}]{f.kind}:{f.key}[/] → {f.value} "
+                  f"(x{f.hits})" for f in memory.recent(12)),
+        title="[bold magenta]most recent facts[/bold magenta]",
+        border_style="magenta"))
+
+
+def _conf_style(fact) -> str:
+    return {"high": "green", "medium": "yellow", "low": "dim"}.get(
+        fact.confidence, "white")
+
+
+def _workflow_cmd(arg: str) -> None:
+    """/workflow — list, show, or run the stack's workflow playbooks.
+
+    Grammar:
+        /workflow                     list every registered playbook
+        /workflow show <name>         print a playbook's steps
+        /workflow run <name> <target> execute it — scope-gated (default-deny)
+    """
+    from rich.panel import Panel
+    from rich.table import Table
+
+    from one2one import cli
+    from one2one.agents import console as agents_console
+    from one2one.agents.workflows import WorkflowRegistry
+
+    reg = WorkflowRegistry()
+    verb, _, rest = arg.partition(" ")
+
+    if verb in ("", "list"):
+        table = Table(title="Workflow playbooks", show_header=True,
+                      header_style="bold magenta")
+        table.add_column("name", style="cyan")
+        table.add_column("steps", style="bold white")
+        table.add_column("plan", style="white")
+        for wf in reg.all():
+            table.add_row(wf.name, str(len(wf.steps)),
+                          " → ".join(s[0] for s in wf.steps))
+        cli.console.print(table)
+        if not reg.all():
+            cli.console.print("[dim]no playbooks — run /feed to pull the seed "
+                              "workflows through the gate[/dim]")
+        return
+
+    if verb == "show":
+        wf = reg.get(rest.strip())
+        if wf is None:
+            cli.console.print(f"[red]no workflow named '{rest.strip()}'[/red]")
+            return
+        cli.console.print(Panel("\n".join(
+            f"{i}. [cyan]{worker}[/cyan] — {purpose}\n   [dim]{tmpl}[/dim]"
+            for i, (worker, tmpl, purpose) in enumerate(wf.steps, start=1)),
+            title=f"[bold magenta]{wf.name} — playbook[/bold magenta]",
+            border_style="magenta"))
+        return
+
+    if verb == "run":
+        name, _, target = rest.partition(" ")
+        name, target = name.strip(), target.strip()
+        if not name or not target:
+            cli.console.print("[dim]Usage: /workflow run <name> <target>[/dim]")
+            return
+        scope = agents_console.configured_scope()
+        decision = scope.check(target)
+        if not decision.allow:
+            cli.console.print(Panel(
+                f"[red]default-deny[/red]\n{decision.reason}\n\n"
+                f"[dim]authorize with /config mission_scope {target} or "
+                f"an active /engagement[/dim]",
+                title="[bold red]workflow gate[/bold red]", border_style="red"))
+            return
+        memory = agents_console.stack_memory()
+        out = reg.run(name, target, memory=memory)
+        table = Table(title=f"{name} → {target}", show_header=True,
+                      header_style="bold magenta")
+        table.add_column("step", style="cyan")
+        table.add_column("result", style="white")
+        ok = out["executed"]
+        table.add_row("executed", "yes" if ok else "no")
+        table.add_row("findings", str(len(out["findings"])))
+        table.add_row("known", str(len(out.get("known", []))))
+        table.add_row("intel", str(len(out["intel"])))
+        cli.console.print(table)
+        for err in out["errors"]:
+            cli.console.print(f"[red]· {err}[/red]")
+        return
+
+    cli.console.print(f"[dim]Unknown /workflow {verb}. "
+                      f"Try: list | show | run[/dim]")
+
+
 def _ask_mission(arg: str) -> None:
     """/ask — run a plain-English mission through APEX inside mission_scope."""
     from rich.panel import Panel
     from rich.table import Table
 
+    from one2one import cli
     from one2one.agents import console as agents_console
-    import one2one.cli as cli
 
     intent = (arg or "").strip()
     if not intent:
@@ -359,8 +626,7 @@ def _print_panes(windows):
 def _run_command(arg, ctx):
     """``/run [tool] [args…] [&]`` — trailing ``&`` backgrounds via tmux (when
     enabled); otherwise opens the tool's foreground menu (unchanged slice 2a)."""
-    import one2one.cli as cli
-    from one2one import session
+    from one2one import cli, session
 
     arg = arg.strip()
     bg = arg.endswith("&")
@@ -421,6 +687,7 @@ def _session():
     from prompt_toolkit.history import FileHistory
     from prompt_toolkit.output import DummyOutput
     from prompt_toolkit.styles import Style
+
     from one2one import repl
     from one2one.constants import THEME_HEX, USER_HISTORY_FILE
 
@@ -503,6 +770,7 @@ def simple(prompt, default=""):
     except ImportError:
         pass
     from rich.text import Text
+
     from one2one.core import console
 
     # Render rich markup in the prompt label, then read via plain input().

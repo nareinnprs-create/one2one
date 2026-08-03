@@ -57,6 +57,31 @@ def test_dispatch_tags_lists_and_continues(monkeypatch):
     assert called["hit"] is True
 
 
+def test_dispatch_feed_runs_sync(monkeypatch):
+    seen = {}
+    monkeypatch.setattr(prompt, "_feed_cmd", lambda arg: seen.setdefault("arg", arg))
+    assert prompt.dispatch("/feed", PromptCtx("home")) is CONTINUE
+    assert prompt.dispatch("/sync", PromptCtx("home")) is CONTINUE
+    assert prompt.dispatch("/skill-feed", PromptCtx("home")) is CONTINUE
+    assert seen == {"arg": ""}
+
+
+def test_dispatch_memory_shows_recall(monkeypatch):
+    seen = []
+    monkeypatch.setattr(prompt, "_memory_cmd", lambda arg: seen.append(arg))
+    assert prompt.dispatch("/memory", PromptCtx("home")) is CONTINUE
+    assert prompt.dispatch("/memory example.com", PromptCtx("home")) is CONTINUE
+    assert seen == ["", "example.com"]
+
+
+def test_dispatch_workflow_routes(monkeypatch):
+    seen = []
+    monkeypatch.setattr(prompt, "_workflow_cmd", lambda arg: seen.append(arg))
+    assert prompt.dispatch("/workflow", PromptCtx("home")) is CONTINUE
+    assert prompt.dispatch("/wf run recon-chain example.com", PromptCtx("home")) is CONTINUE
+    assert seen == ["", "run recon-chain example.com"]
+
+
 # ── dispatch: mentions → Open(raw) ───────────────────────────────────────────
 
 def test_dispatch_tool_mention_returns_open():

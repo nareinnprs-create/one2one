@@ -16,7 +16,7 @@ from __future__ import annotations
 import re
 import shlex
 import subprocess
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from functools import lru_cache
 
 from one2one.agents import roster
@@ -96,10 +96,14 @@ class Worker:
     SIGNATURES: tuple = ()              # (vuln_class, label, regex, confidence)
     INTEL_PATTERNS: tuple = ()          # (label, regex)
 
-    def __init__(self, runner=None, catalog=None) -> None:
+    def __init__(self, runner=None, catalog=None, memory=None) -> None:
         self.runner = runner or _default_runner
         self._catalog = catalog if catalog is not None else _load_catalog()
         self.responsibility = roster.responsibility(self.CALLSIGN)
+        # Optional deeper memory (agents/memory.py). When set, analyze() refuses
+        # to re-report findings the stack already knows and records new ones —
+        # the honesty contract made durable across sessions.
+        self.memory = memory
 
     # ── planning ───────────────────────────────────────────────────────────────
     def catalog_steps(self, target: str) -> list[Step]:
@@ -183,8 +187,38 @@ class Worker:
         ok_count = sum(1 for r in results if r.ok)
         note = (f"{len(self.plan(target))} steps planned, {ok_count} ran; "
                 f"{len(findings)} finding(s), {len(intel)} intel item(s)")
-        return WorkerReport(worker=self.CALLSIGN, executed=ok_count > 0,
-                            note=note, findings=findings, intel=intel)
+        report = WorkerReport(worker=self.CALLSIGN, executed=ok_count > 0,
+                              note=note, findings=findings, intel=intel)
+        if self.memory is not None:
+            return self._reconcile_memory(target, report)
+        return report
+
+    # ── deeper-memory reconciliation (Item 4) ──────────────────────────────────
+    def _reconcile_memory(self, target: str, report: WorkerReport) -> WorkerReport:
+        """Memory-assisted analysis: suppress what the stack already knows.
+
+        A finding already remembered for this target (kind='finding',
+        key=target, value='vuln_class|summary') is moved to ``report.known`` —
+        never re-reported as new. Brand-new findings are recorded so the next
+        mission on this target stays honest.
+        """
+        known: list = []
+        fresh: list = []
+        for finding in report.findings:
+            fact_value = f"{finding.vuln_class}|{finding.summary}"
+            if self.memory.recall(kind="finding", key=target,
+                                  value=fact_value):
+                known.append(finding)
+            else:
+                fresh.append(finding)
+                self.memory.record("finding", target, fact_value,
+                                   finding.confidence, source=self.CALLSIGN)
+        report.findings = fresh
+        report.known = known
+        if known:
+            report.note = (report.note or "").rstrip() + \
+                          f"; {len(known)} already known (suppressed)"
+        return report
 
     def run(self, mission) -> WorkerReport:
         target = (mission.target or "").strip()

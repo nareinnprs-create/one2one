@@ -18,7 +18,7 @@ loop can mutate, validate and roll back without ever touching the codebase.
 """
 from __future__ import annotations
 
-from dataclasses import asdict, dataclass, field
+from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from types import SimpleNamespace
 from uuid import uuid4
@@ -208,19 +208,30 @@ class PatchGate:
 class Evolution:
     """Owns the loop: learn → propose → gate → propagate → re-run → rollback."""
 
-    def __init__(self, lessons_path=None, gate: PatchGate | None = None) -> None:
+    def __init__(self, lessons_path=None, gate: PatchGate | None = None,
+                 memory=None) -> None:
         # Load the persisted lesson log so lessons survive across sessions; a
         # fresh path simply starts empty. (Without this, the first mission of a
         # new session would overwrite every lesson learned earlier.)
         self.lessons = LessonLedger.load(
             lessons_path or (LEDGER_FILE.parent / "lessons.json"))
+        # Deeper memory lives beside the lesson log: each lesson is distilled
+        # into durable, recallable facts (see agents/memory.py).
+        from one2one.agents.memory import AgentMemory
+        self.memory = memory or AgentMemory(
+            self.lessons.path.parent / "memory.json")
         self.gate = gate or PatchGate()
         self.patches: dict[str, SkillPatch] = {}
         self.applied: dict[str, list[str]] = {}   # patch_id -> callsigns
 
     # 1. log
     def learn_from_mission(self, mission) -> Lesson:
-        """Record a mission's outcome as a structured, versioned lesson."""
+        """Record a mission's outcome as a structured, versioned lesson.
+
+        Also deepens the stack's memory: the lesson is distilled into durable,
+        recallable facts (targets seen, agent outcomes, finding counts) that
+        survive across sessions (agents/memory.py).
+        """
         outcome = mission.outcome or {}
         findings = outcome.get("findings") or []
         status = getattr(mission, "status", "")
@@ -239,10 +250,25 @@ class Evolution:
             outcome=resolved,
             findings=len(findings),
         )
-        return self.lessons.record(lesson)
+        lesson = self.lessons.record(lesson)
+        self.memory.distill(lesson)
+        # Remember each accepted finding so memory-assisted workers refuse to
+        # re-report it on the next pass (Item 4, honesty contract).
+        for finding in findings:
+            value = f"{finding.get('vuln_class', '')}|{finding.get('summary', '')}"
+            if mission.target and value != "|":
+                self.memory.record("finding", mission.target, value,
+                                   finding.get("confidence", "medium"),
+                                   source=lesson.id)
+        return lesson
 
     def lessons_for(self, agent: str) -> list[Lesson]:
         return self.lessons.by_agent(agent)
+
+    # deeper memory: distill every lesson into durable, recallable facts
+    def distill(self, lesson: Lesson) -> list:
+        """Persist the lesson as durable memory facts (agents/memory.py)."""
+        return self.memory.distill(lesson)
 
     # 2. mutate
     def propose(self, agent: str, kind: str, payload, rationale: str,
@@ -251,7 +277,8 @@ class Evolution:
         agent = agent.upper()
         if agent not in roster.WORKERS:
             raise ValueError(f"{agent} is not a Tier-1 worker")
-        if kind not in ("add-signature", "add-intel", "add-builtin"):
+        if kind not in ("add-signature", "add-intel", "add-builtin",
+                        "add-workflow"):
             raise ValueError(f"unknown mutation kind {kind!r}")
         patch = SkillPatch(
             id=new_patch_id(agent),
@@ -328,6 +355,8 @@ class Evolution:
         return targets
 
     def _propagate_and_validate(self, patch: SkillPatch) -> SkillPatch:
+        if patch.kind == "add-workflow":
+            return self._register_workflow(patch)
         applied: list[str] = []
         rolled_back: list[str] = []
         for cls in self._propagation_targets(patch):
@@ -350,6 +379,35 @@ class Evolution:
             patch.status = "active"
         else:
             patch.status = "approved"
+        return patch
+
+    def _register_workflow(self, patch: SkillPatch) -> SkillPatch:
+        """Propagate an approved workflow to the persistent playbook registry.
+
+        The "regression" for a playbook is static validity (every step names a
+        real worker and a fillable template); an invalid workflow is refused.
+        """
+        from one2one.agents.workflows import WorkflowRegistry
+
+        name, steps = patch.payload
+        reg = WorkflowRegistry(self.lessons.path.parent / "workflows.json")
+        issues = []
+        wf = None
+        try:
+            wf = reg.register(name, steps, source=patch.id)
+            issues = reg.validate(wf)
+        except (ValueError, TypeError):
+            issues = ["malformed workflow payload"]
+        if issues:
+            self.gate.review(patch, roster.OPERATOR, False,
+                             "workflow invalid: " + "; ".join(issues))
+            patch.status = "killed"
+            patch.note = f"workflow {name!r} refused: " + "; ".join(issues)
+            return patch
+        applied = [name]
+        self.applied[patch.id] = applied
+        patch.note = f"workflow '{name}' registered ({len(wf.steps)} step(s))"
+        patch.status = "active"
         return patch
 
     def picture(self) -> dict:

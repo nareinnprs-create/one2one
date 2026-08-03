@@ -17,16 +17,24 @@ def scope_from_text(scope_text: str):
 
 
 def configured_scope():
-    """The scope stored in config ``mission_scope`` (default-deny when empty)."""
-    from one2one import config
+    """The scope the stack enforces, in priority order:
+
+    1. The active engagement's scope (when an engagement is active) — so the
+       gate and the engagement share ONE source of truth.
+    2. The ``mission_scope`` config (default-deny when empty).
+    """
+    from one2one import config, engagement
+    active = engagement.active()
+    if active is not None:
+        return active.to_scope()
     return scope_from_text(config.load().get("mission_scope", ""))
 
 
 def default_apex():
     """A console APEX: persistent ledger, Mythos workers, configured scope."""
+    from one2one.agents.adapters import register_mythos
     from one2one.agents.command import Apex, WorkerRegistry
     from one2one.agents.ledger import MissionLedger
-    from one2one.agents.adapters import register_mythos
 
     workers = register_mythos(WorkerRegistry())
     apex = Apex(ledger=MissionLedger.load(), workers=workers)
@@ -41,3 +49,10 @@ def run_mission(intent: str, stream=None) -> dict:
     passes the wing lead's review. Returns ``Apex.ask``'s result dict.
     """
     return default_apex().ask(intent, stream=stream)
+
+
+def stack_memory():
+    """The stack's persistent deeper memory, next to the console lesson log."""
+    from one2one.agents.ledger import LEDGER_FILE
+    from one2one.agents.memory import AgentMemory
+    return AgentMemory(LEDGER_FILE.parent / "memory.json")

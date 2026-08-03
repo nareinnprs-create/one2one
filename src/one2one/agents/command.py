@@ -34,6 +34,7 @@ class WorkerReport:
     note: str
     findings: list = field(default_factory=list)
     intel: list = field(default_factory=list)
+    known: list = field(default_factory=list)   # memory: already-known findings
 
 
 def dispatch_worker(mission: Mission) -> WorkerReport:
