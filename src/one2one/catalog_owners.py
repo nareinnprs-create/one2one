@@ -177,7 +177,6 @@ CATALOG_OWNERS: frozenset[str] = frozenset({
     "wiire",
     "wpscanteam",
     "xHak9x",
-    "Z4nzu",
     "zaproxy",
     "zed-0xff",
     "ZerBea",
