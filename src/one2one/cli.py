@@ -155,6 +155,8 @@ def show_help():
             ("  /goal  ", "bold cyan"), ("AI-plan & run an objective, one step at a time (e.g. /goal find subdomains of x.com)\n", "white"),
             ("  /mythos", "bold cyan"), ("six-agent red-team pipeline — RECON→HUNTER→ADVERSARIAL→EXPLOIT→TRIAGE→AI-SECURITY (e.g. /mythos example.com, /mythos code:./src)\n", "white"),
             ("  /find  ", "bold cyan"), ("find tools for a need — your toolbox + GitHub, suggest-only (e.g. /find hidden directories on a website)\n", "white"),
+            ("  /agents", "bold cyan"), ("show the 37-agent stack — APEX → COMMANDER → 3 wings → 32 workers\n", "white"),
+            ("  /stack ", "bold cyan"), ("live mission ledger — what each agent is doing right now\n", "white"),
             ("  ?      ", "bold cyan"), ("show this help\n", "white"),
             ("  clear  ", "bold cyan"), ("clear the screen (also /clear)\n", "white"),
             ("  /config ", "bold cyan"), ("view/edit settings; /config test checks the AI connection\n", "white"),

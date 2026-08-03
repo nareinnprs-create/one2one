@@ -168,6 +168,8 @@ def dispatch(raw, ctx):
         elif cmd in ("find", "discover"):
             from one2one import discover
             discover.run(arg, ctx)
+        elif cmd in ("agents", "stack"):
+            _show_agents(cmd == "stack")
         elif cmd in ("clear", "cls"):
             _clear(ctx)
         elif cmd in ("uninstall", "remove"):
@@ -203,6 +205,48 @@ def _clear(ctx):
     if ctx.mode == "home":
         import one2one.cli as cli
         cli.console.print(cli._build_header())
+
+
+def _show_agents(show_picture: bool = False) -> None:
+    """/agents — print the 37-agent stack; /stack — print the live mission ledger."""
+    from rich.panel import Panel
+    from rich.table import Table
+
+    from one2one import agents
+    from one2one.agents.ledger import LEDGER_FILE, MissionLedger
+    import one2one.cli as cli
+
+    cli.console.print()
+    if show_picture:
+        ledger = MissionLedger.load(LEDGER_FILE)
+        pic = ledger.picture()
+        summary = " · ".join(f"{k}: {v}" for k, v in pic.items() if k != "total")
+        cli.console.print(Panel(
+            f"[bold]{pic['total']}[/bold] missions · {summary}",
+            title="[bold magenta]COMMANDER — live battle picture[/bold magenta]",
+            border_style="magenta"))
+        table = Table(box=None)
+        table.add_column("id", style="dim")
+        table.add_column("worker", style="bold cyan")
+        table.add_column("wing", style="magenta")
+        table.add_column("target", style="green")
+        table.add_column("status", style="yellow")
+        table.add_column("created", style="dim")
+        for m in ledger.recent(15):
+            table.add_row(m.id, m.worker, m.wing or "-", m.target or "-",
+                          m.status, m.created[:19])
+        cli.console.print(table)
+        return
+    table = Table(title="[bold]ONE2ONE AGENT STACK — 37 agents[/bold]", box=None)
+    table.add_column("agent", style="bold cyan")
+    table.add_column("tier", style="magenta")
+    table.add_column("wing", style="yellow")
+    table.add_column("responsibility")
+    for row in agents.get_roster():
+        table.add_row(row["name"], f"T{row['tier']}",
+                      row["wing_name"] if row["wing"] else "-",
+                      row["responsibility"])
+    cli.console.print(table)
 
 
 def _open_manager(which):

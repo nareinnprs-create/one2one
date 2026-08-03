@@ -26,6 +26,8 @@ _COMMANDS = {
     "/goal": "AI-plan & run an objective (per-step confirm)",
     "/mythos": "six-agent red-team pipeline (RECON→HUNTER→ADVERSARIAL→EXPLOIT→TRIAGE→AI-SECURITY)",
     "/find": "find tools for a need (catalog + GitHub)",
+    "/agents": "show the 37-agent stack (APEX→COMMANDER→3 wings→32 workers)",
+    "/stack": "live mission ledger — what each agent is doing right now",
     "/panes": "list background panes",
     "/attach": "attach to background panes (Ctrl-b d to return)",
     "/kill": "kill a background pane (/kill <label|all>)",
