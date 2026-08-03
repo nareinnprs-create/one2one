@@ -12,11 +12,11 @@ into the right tool and the exact command**.
 OSINT researchers · bug-bounty hunters · CTF players · security researchers and
 students — all working **legally, on systems they own or are authorised to test**.
 
-<a href="https://trendshift.io/repositories/869" target="_blank" rel="noopener noreferrer"><img src="https://trendshift.io/api/badge/repositories/869" alt="one2one/one2one | Trendshift" width="250" height="55"/></a> <a href="https://trendshift.io/repositories/869" target="_blank" rel="noopener noreferrer"><img src="https://trendshift.io/api/badge/trendshift/repositories/869/daily?language=Python" alt="one2one/one2one | Trendshift daily" width="250" height="55"/></a> <a href="https://trendshift.io/repositories/869" target="_blank" rel="noopener noreferrer"><img src="https://trendshift.io/api/badge/trendshift/repositories/869/weekly" alt="one2one/one2one | Trendshift weekly" width="250" height="55"/></a>
+<a href="https://trendshift.io/repositories/869" target="_blank" rel="noopener noreferrer"><img src="https://trendshift.io/api/badge/repositories/869" alt="nareinnprs-create/one2one | Trendshift" width="250" height="55"/></a> <a href="https://trendshift.io/repositories/869" target="_blank" rel="noopener noreferrer"><img src="https://trendshift.io/api/badge/trendshift/repositories/869/daily?language=Python" alt="nareinnprs-create/one2one | Trendshift daily" width="250" height="55"/></a> <a href="https://trendshift.io/repositories/869" target="_blank" rel="noopener noreferrer"><img src="https://trendshift.io/api/badge/trendshift/repositories/869/weekly" alt="nareinnprs-create/one2one | Trendshift weekly" width="250" height="55"/></a>
 
 <br/><br/>
 
-[![License](https://img.shields.io/github/license/one2one/one2one?style=flat-square&labelColor=0D1117&color=7B61FF)](LICENSE) [![Python](https://img.shields.io/badge/Python-3.10+-0D1117?style=flat-square&labelColor=0D1117&logo=python&logoColor=7B61FF)](https://www.python.org/) [![Stars](https://img.shields.io/github/stars/one2one/one2one?style=flat-square&labelColor=0D1117&color=7B61FF)](https://github.com/one2one/one2one/stargazers) [![Forks](https://img.shields.io/github/forks/one2one/one2one?style=flat-square&labelColor=0D1117&color=7B61FF)](https://github.com/one2one/one2one/network/members) [![Issues](https://img.shields.io/github/issues/one2one/one2one?style=flat-square&labelColor=0D1117&color=7B61FF)](https://github.com/one2one/one2one/issues) [![Last Commit](https://img.shields.io/github/last-commit/one2one/one2one?style=flat-square&labelColor=0D1117&color=7B61FF)](https://github.com/one2one/one2one/commits/master) [![Sponsor](https://img.shields.io/badge/Sponsor-%E2%9D%A4-DB61A2?style=flat-square&labelColor=0D1117&logo=githubsponsors&logoColor=DB61A2)](#support--sponsor)
+[![License](https://img.shields.io/github/license/nareinnprs-create/one2one?style=flat-square&labelColor=0D1117&color=7B61FF)](LICENSE) [![Python](https://img.shields.io/badge/Python-3.10+-0D1117?style=flat-square&labelColor=0D1117&logo=python&logoColor=7B61FF)](https://www.python.org/) [![Stars](https://img.shields.io/github/stars/nareinnprs-create/one2one?style=flat-square&labelColor=0D1117&color=7B61FF)](https://github.com/nareinnprs-create/one2one/stargazers) [![Forks](https://img.shields.io/github/forks/nareinnprs-create/one2one?style=flat-square&labelColor=0D1117&color=7B61FF)](https://github.com/nareinnprs-create/one2one/network/members) [![Issues](https://img.shields.io/github/issues/nareinnprs-create/one2one?style=flat-square&labelColor=0D1117&color=7B61FF)](https://github.com/nareinnprs-create/one2one/issues) [![Last Commit](https://img.shields.io/github/last-commit/nareinnprs-create/one2one?style=flat-square&labelColor=0D1117&color=7B61FF)](https://github.com/nareinnprs-create/one2one/commits/master) [![Sponsor](https://img.shields.io/badge/Sponsor-%E2%9D%A4-DB61A2?style=flat-square&labelColor=0D1117&logo=githubsponsors&logoColor=DB61A2)](#support--sponsor)
 
 <br/>
 
@@ -125,7 +125,7 @@ directory.
 
 ```bash
 # 1 — get the code
-git clone https://github.com/one2one/one2one.git
+git clone https://github.com/nareinnprs-create/one2one.git
 cd one2one
 
 # 2 — install it onto your PATH (isolated venv, no system Python touched)
@@ -153,7 +153,7 @@ To update later: `git pull && pipx install . --force`. To remove it:
 <summary>Alternative: <code>uv tool install .</code> (same result, uses uv instead of pipx)</summary>
 
 ```bash
-git clone https://github.com/one2one/one2one.git
+git clone https://github.com/nareinnprs-create/one2one.git
 cd one2one
 uv tool install .        # installs the `one2one` executable on your PATH
 one2one
@@ -164,7 +164,7 @@ one2one
 <summary>Alternative: plain venv + pip (no PATH changes)</summary>
 
 ```bash
-git clone https://github.com/one2one/one2one.git
+git clone https://github.com/nareinnprs-create/one2one.git
 cd one2one
 python3 -m venv .venv && . .venv/bin/activate
 pip install .            # or: pip install -e .   for an editable dev install
@@ -180,7 +180,7 @@ The command is only on your PATH while that venv is activated.
 `pyproject.toml` / `uv.lock` in one step:
 
 ```bash
-git clone https://github.com/one2one/one2one.git
+git clone https://github.com/nareinnprs-create/one2one.git
 cd one2one
 uv sync
 uv run one2one
@@ -197,13 +197,13 @@ gate (lint + tests + catalog validation). See [CONTRIBUTING.md](CONTRIBUTING.md)
 Pull and run the published image:
 
 ```bash
-docker run -it --rm hardikzinzu/one2one:latest
+docker run -it --rm ghcr.io/nareinnprs-create/one2one:latest
 ```
 
 Or build it locally from a checkout:
 
 ```bash
-git clone https://github.com/one2one/one2one.git && cd one2one
+git clone https://github.com/nareinnprs-create/one2one.git && cd one2one
 docker build -t one2one .
 docker run -it --rm one2one
 ```
@@ -226,7 +226,7 @@ one2one
 
 ### Debian / Ubuntu / Kali (.deb)
 
-Grab the `.deb` from the [latest release](https://github.com/one2one/one2one/releases/latest):
+Grab the `.deb` from the [latest release](https://github.com/nareinnprs-create/one2one/releases/latest):
 
 ```bash
 sudo apt install ./one2one_*.deb
@@ -499,14 +499,14 @@ one-entry catalog walkthrough — is in **[CONTRIBUTING.md](CONTRIBUTING.md)**.
 
 <!-- Star History — enabled later.
      GitHub now restricts anonymous star-history data, so a live chart can't render.
-     To enable: open https://star-history.com/#one2one/one2one&Date (sign in with a
+     To enable: open https://star-history.com/#nareinnprs-create/one2one&Date (sign in with a
      GitHub token — it's your repo), download the chart image, save it as
      images/star-history.png, and uncomment the block below.
 
 ## Star History
 
 <div align="center">
-<a href="https://star-history.com/#one2one/one2one&Date"><img src="images/star-history.png" alt="One2One Star History Chart" width="640"></a>
+<a href="https://star-history.com/#nareinnprs-create/one2one&Date"><img src="images/star-history.png" alt="One2One Star History Chart" width="640"></a>
 </div>
 
 ---
@@ -529,4 +529,4 @@ and keeping installs safe and current.
 > **For authorized security testing only.**
 > Thanks to all original authors of the tools included in one2one.
 
-Your favourite tool is not listed? [Suggest it here](https://github.com/one2one/one2one/issues/new?template=tool_request.md)
+Your favourite tool is not listed? [Suggest it here](https://github.com/nareinnprs-create/one2one/issues/new?template=tool_request.md)

@@ -209,8 +209,11 @@ class Evolution:
     """Owns the loop: learn → propose → gate → propagate → re-run → rollback."""
 
     def __init__(self, lessons_path=None, gate: PatchGate | None = None) -> None:
-        self.lessons = LessonLedger(
-            path=lessons_path or (LEDGER_FILE.parent / "lessons.json"))
+        # Load the persisted lesson log so lessons survive across sessions; a
+        # fresh path simply starts empty. (Without this, the first mission of a
+        # new session would overwrite every lesson learned earlier.)
+        self.lessons = LessonLedger.load(
+            lessons_path or (LEDGER_FILE.parent / "lessons.json"))
         self.gate = gate or PatchGate()
         self.patches: dict[str, SkillPatch] = {}
         self.applied: dict[str, list[str]] = {}   # patch_id -> callsigns

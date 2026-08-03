@@ -22,7 +22,7 @@ These are enforced in review and, where possible, by CI:
 ## Dev setup
 
 ```bash
-git clone https://github.com/one2one/one2one.git
+git clone https://github.com/nareinnprs-create/one2one.git
 cd one2one
 make setup            # one-time: point git at .githooks (pre-push runs the gate)
 uv run one2one    # run from source (uv provides rich/pyyaml/platformdirs)

@@ -208,6 +208,16 @@ def test_config_routes(monkeypatch):
     assert got["arg"] == "background_runner off"
 
 
+def test_ask_routes_to_mission(monkeypatch):
+    from one2one import prompt
+    called = {}
+    monkeypatch.setattr(prompt, "_ask_mission", lambda arg: called.__setitem__("arg", arg))
+    assert prompt.dispatch("/ask enumerate example.com", prompt.PromptCtx("home")) is prompt.CONTINUE
+    assert called["arg"] == "enumerate example.com"
+    prompt.dispatch("/mission", prompt.PromptCtx("home"))
+    assert called["arg"] == ""            # no-arg still routes (shows usage)
+
+
 def test_status_shows_running(monkeypatch):
     from one2one import prompt, session
     monkeypatch.setattr(session, "enabled", lambda: True)

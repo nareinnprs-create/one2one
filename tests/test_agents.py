@@ -606,6 +606,19 @@ def test_apex_learns_from_each_mission(tmp_path):
     assert (tmp_path / "lessons.json").exists()
 
 
+def test_evolution_reloads_persisted_lessons(tmp_path):
+    # A fresh Evolution on the same path must re-read lessons from disk, so a
+    # later session keeps learning instead of overwriting history.
+    path = tmp_path / "lessons.json"
+    first = agents.Evolution(lessons_path=path)
+    first.learn_from_mission(agents.Mission(
+        id="EYRIE-abc", intent="recon", worker="EYRIE", target="example.com",
+        status="done", outcome={"findings": []}))
+    assert first.lessons.picture()["total"] == 1
+    second = agents.Evolution(lessons_path=path)
+    assert second.lessons.picture()["total"] == 1
+
+
 def test_apex_learns_killed_mission(tmp_path):
     apex = _apex(tmp_path, Scope(scope_in=["*.example.com"]))
     out = apex.ask("recon", target="evil.org")

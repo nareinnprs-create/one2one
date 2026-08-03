@@ -22,6 +22,7 @@ Headless (CI/CD):
 from __future__ import annotations
 
 import json
+import locale
 import re
 import shutil
 import subprocess
@@ -96,8 +97,19 @@ def _audit(ws: Path, msg: str) -> None:
         pass
 
 
+def _phase_mark() -> str:
+    """Phase bullet — glyph-kit fallback (UI_UX_DESIGN §2.4): use the wide glyph
+    when the console encoding can represent it, else ASCII. Kills the class of
+    cp1252 crashes where the legacy Windows renderer tries to encode U+25C8."""
+    try:
+        "◈".encode(locale.getpreferredencoding(False))
+        return "◈"
+    except (LookupError, UnicodeEncodeError):
+        return "#"
+
+
 def _print_agent(agent: dict) -> None:
-    console.print(f"\n[bold magenta]◈ Phase {agent['phase']} — {agent['title']}"
+    console.print(f"\n[bold magenta]{_phase_mark()} Phase {agent['phase']} — {agent['title']}"
                   f"[/bold magenta] [dim]({agent['key']})[/dim]")
 
 def _agent_header(agent: dict, task: str) -> str:

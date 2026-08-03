@@ -31,7 +31,7 @@ assignees: ''
 |---|---|
 | OS | <!-- e.g. Kali Linux 2024.1, Ubuntu 22.04, macOS 14 --> |
 | Python | <!-- `python3 --version` --> |
-| one2one | v3.0.0 |
+| one2one | v4.0.0 |
 
 ## Additional Context
 <!-- Screenshots, workarounds tried, etc. -->

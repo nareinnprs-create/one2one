@@ -20,7 +20,7 @@ current `master` / latest PyPI release before reporting.
 
 Report privately through GitHub's private advisory flow:
 
-➡ **https://github.com/one2one/one2one/security/advisories/new**
+➡ **https://github.com/nareinnprs-create/one2one/security/advisories/new**
 
 Include:
 
@@ -67,10 +67,10 @@ both attested via Sigstore. Verify what you install:
 
 ```bash
 # PyPI wheel/sdist and the GitHub release .deb carry build-provenance attestations
-gh attestation verify <artifact> --repo one2one/one2one
+gh attestation verify <artifact> --repo nareinnprs-create/one2one
 
 # The SBOM (attached to each GitHub release as one2one.cdx.json) is attested too
-gh attestation verify dist/one2one-*.whl --repo one2one/one2one --predicate-type https://cyclonedx.org/bom
+gh attestation verify dist/one2one-*.whl --repo nareinnprs-create/one2one --predicate-type https://cyclonedx.org/bom
 ```
 
 PyPI uploads additionally carry [PEP 740](https://peps.python.org/pep-0740/) digital

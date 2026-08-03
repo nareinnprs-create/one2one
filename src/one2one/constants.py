@@ -3,13 +3,13 @@ import platform
 import shutil as _shutil
 
 # ── Repository ────────────────────────────────────────────────────────────────
-REPO_OWNER   = "one2one"
+REPO_OWNER   = "nareinnprs-create"
 REPO_NAME    = "one2one"
 REPO_URL     = f"https://github.com/{REPO_OWNER}/{REPO_NAME}.git"
 REPO_WEB_URL = f"https://github.com/{REPO_OWNER}/{REPO_NAME}"
 
 # ── Versioning ────────────────────────────────────────────────────────────────
-VERSION         = "3.0.0"
+VERSION         = "4.0.0"
 VERSION_DISPLAY = f"v{VERSION}"
 
 # ── Python requirement ────────────────────────────────────────────────────────
@@ -85,6 +85,7 @@ DEFAULT_CONFIG: dict = {
     "ai_model":       "llama3",    # model name sent to the transport
     "ai_base_url":    "",          # OpenAI-compatible endpoint (blank = local Ollama)
     "mythos_sandbox": "auto",      # "auto" (docker PoC validation iff docker present + approval) | "off"
+    "mission_scope": "",           # comma-separated targets /ask may act on (empty = default-deny)
     "sudo_binary":    "sudo",
     "go_bin_dir":     str(Path.home() / "go" / "bin"),
     "gem_bin_dir":    str(Path.home() / ".gem" / "ruby"),

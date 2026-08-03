@@ -168,6 +168,8 @@ def dispatch(raw, ctx):
         elif cmd in ("find", "discover"):
             from one2one import discover
             discover.run(arg, ctx)
+        elif cmd in ("ask", "mission"):
+            _ask_mission(arg)
         elif cmd in ("agents", "stack"):
             _show_agents(cmd == "stack")
         elif cmd in ("clear", "cls"):
@@ -246,6 +248,75 @@ def _show_agents(show_picture: bool = False) -> None:
         table.add_row(row["name"], f"T{row['tier']}",
                       row["wing_name"] if row["wing"] else "-",
                       row["responsibility"])
+    cli.console.print(table)
+
+
+def _ask_mission(arg: str) -> None:
+    """/ask — run a plain-English mission through APEX inside mission_scope."""
+    from rich.panel import Panel
+    from rich.table import Table
+
+    from one2one.agents import console as agents_console
+    import one2one.cli as cli
+
+    intent = (arg or "").strip()
+    if not intent:
+        cli.console.print(
+            "[dim]Usage: /ask <mission> — e.g. [/dim]"
+            "[cyan]/ask enumerate example.com[/cyan]"
+            "[dim] · authorize targets first: /config mission_scope[/dim]")
+        return
+
+    scope = agents_console.configured_scope()
+    cli.console.print(Panel(
+        scope.describe(),
+        title="[bold magenta]APEX — mission gate[/bold magenta]",
+        border_style="magenta"))
+
+    def stream(finding):
+        cli.console.print(f"  [dim]↑[/dim] [bold cyan]{finding.agent}[/bold cyan] "
+                          f"[yellow]{finding.severity}[/yellow] "
+                          f"[green]{finding.vuln_class}[/green] "
+                          f"[dim]{finding.file_path}[/dim]")
+
+    try:
+        result = agents_console.run_mission(intent, stream=stream)
+    except Exception as exc:  # the console must never crash on a bad mission
+        cli.console.print(f"[bold red]APEX mission failed:[/bold red] {exc}")
+        return
+
+    mission = result.get("mission")
+    mid = mission.id if mission is not None else "-"
+    if not result.get("allowed"):
+        cli.console.print(Panel(
+            f"[bold red]mission refused by scope gate[/bold red]\n"
+            f"[dim]reason:[/dim] {result.get('reason', 'default-deny')}\n"
+            f"[dim]mission:[/dim] {mid}\n"
+            f"[dim]hint:[/dim] /config mission_scope example.com,example.org",
+            border_style="red"))
+        return
+
+    report = result.get("report")
+    note = getattr(report, "note", "") or ""
+    findings = result.get("findings") or []
+    cli.console.print(Panel(
+        f"[bold green]mission complete[/bold green] · [dim]{mid}[/dim]\n"
+        f"[dim]worker:[/dim] {mission.worker} · [dim]wing:[/dim] "
+        f"{mission.wing or '-'} · [dim]target:[/dim] "
+        f"{mission.target or '-'}\n[dim]note:[/dim] {note}",
+        border_style="green"))
+    if not findings:
+        cli.console.print("[dim]Wing lead: clean — nothing survived brutal review.[/dim]")
+        return
+    table = Table(title=f"[bold]{len(findings)} finding(s) escalated[/bold]",
+                  box=None)
+    table.add_column("agent", style="bold cyan")
+    table.add_column("severity", style="yellow")
+    table.add_column("class", style="green")
+    table.add_column("confidence", style="magenta")
+    table.add_column("file_path", style="dim")
+    for f in findings:
+        table.add_row(f.agent, f.severity, f.vuln_class, f.confidence, f.file_path)
     cli.console.print(table)
 
 

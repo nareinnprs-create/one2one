@@ -26,7 +26,7 @@ and something you get back — no prior knowledge of the codebase needed.
    quickest path that puts `one2one` on your PATH is:
 
    ```bash
-   git clone https://github.com/one2one/one2one.git
+   git clone https://github.com/nareinnprs-create/one2one.git
    cd one2one
    pipx install .
    ```

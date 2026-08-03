@@ -454,7 +454,7 @@ def _rewrite(need: str) -> Rewrite:
 
 
 _CACHE_TTL = 24 * 3600
-_USER_AGENT = "one2one/find (+https://github.com/one2one/one2one)"
+_USER_AGENT = "one2one/find (+https://github.com/nareinnprs-create/one2one)"
 
 
 class RateLimited(Exception):

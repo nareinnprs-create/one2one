@@ -1,14 +1,14 @@
 # docker-compose.yml
 # Run the interactive TUI:  docker compose run --rm one2one
 # Or pull the published image instead of building:
-#   docker run -it --rm ghcr.io/one2one/one2one:latest
+#   docker run -it --rm ghcr.io/nareinnprs-create/one2one:latest
 
 services:
   one2one:
     build:
       context: .
       dockerfile: Dockerfile
-    image: ghcr.io/one2one/one2one:latest
+    image: ghcr.io/nareinnprs-create/one2one:latest
     container_name: one2one
     stdin_open: true
     tty: true

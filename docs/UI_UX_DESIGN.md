@@ -78,7 +78,7 @@ Rules:
 - Monospace, terminal-native. Hierarchy = weight (`bold`) + case + color tokens.
 - Voice: terse operator register. Commands/code in `fg` bold; prose in `fg-muted`.
 - The brand is a **wordmark line**, not ASCII art:
-  `one2one v3.0.0` + theme dot + the one-line mission on first run only.
+  `one2one v4.0.0` + theme dot + the one-line mission on first run only.
 
 ### 2.4 Glyph kit (cp1252-safe)
 
@@ -115,7 +115,7 @@ project already hit (`✓`/`◈`).
 ### 3.1 Home dashboard (replaces `build_menu` + ASCII header)
 
 ```
-one2one v3.0.0                                        ● dark  ·  model: llama3
+one2one v4.0.0                                        ● dark  ·  model: llama3
 ──────────────────────────────────────────────────────────────────────────
   ENGAGEMENT   acme-2026-08   ● 2 in-scope   ·  ! 1 excluded   ·  3 findings
   QUICK        /find     /mythos     /goal     /config     /help

@@ -2,11 +2,14 @@
 # Kali base: many bundled tools already present, and it's the platform this
 # audience runs. The image installs one2one as a proper package (console
 # entry point `one2one`), not the old `python3 one2one.py` flat script.
-FROM kalilinux/kali-rolling:latest
+# Pin the base to the multi-arch manifest digest (rolling = daily updates; the
+# digest pins this exact build for reproducible/attestable images). Re-pin with:
+#   docker buildx imagetools inspect kalilinux/kali-rolling:latest
+FROM kalilinux/kali-rolling:latest@sha256:3093a0bd1f1196f4b10ab8e4a671929a6cd0153768642e6aa20dfced5e4132c5
 
 LABEL org.opencontainers.image.title="one2one" \
       org.opencontainers.image.description="All-in-One One2One for Security Researchers" \
-      org.opencontainers.image.source="https://github.com/one2one/one2one" \
+      org.opencontainers.image.source="https://github.com/nareinnprs-create/one2one" \
       org.opencontainers.image.licenses="MIT"
 
 # Runtime system deps: python + git (tools clone their own repos) + php/curl/wget

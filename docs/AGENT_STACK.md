@@ -169,6 +169,14 @@ User-facing surfaces: `APEX` is the voice of `/ai`, `/mythos`, `/redteam` and
 the `/find` discovery. Worker output lands in the existing findings ledger and
 report pipeline unchanged.
 
+**`/ask`** runs plain-English missions straight through `APEX` from the console:
+`/ask enumerate example.com` fans the intent through the scope gate, dispatches
+to the routed worker (Mythos adapter), has the wing lead review the findings,
+and logs everything to the live ledger (`/stack`). Default-deny: nothing is in
+scope until the user authorizes targets via `/config mission_scope
+example.com,*.example.org` — out-of-scope missions are killed at the gate and
+still ledgered for the audit trail. (See `src/one2one/agents/console.py`.)
+
 ---
 
 ## 7. Build Plan
